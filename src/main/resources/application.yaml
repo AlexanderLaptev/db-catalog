@@ -1,0 +1,6 @@
+ktor:
+    application:
+        modules:
+            - ru.trfx.catalog.ApplicationKt.master
+    deployment:
+        port: 8080
