@@ -1,6 +1,5 @@
 package ru.trfx.catalog.medicine
 
-import org.jetbrains.exposed.sql.Query
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
 import org.jetbrains.exposed.sql.deleteAll
@@ -10,14 +9,14 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.upperCase
+import ru.trfx.catalog.util.escapeTemplates
+import ru.trfx.catalog.util.paginate
 
 object MedicineRepository {
-    private const val MAX_LIMIT = 200
-
     fun getAll(page: Int, limit: Int): List<Medicine> = transaction {
         MedicineTable
             .selectAll()
-            .pages(page, limit)
+            .paginate(page, limit)
             .orderBy(MedicineTable.id)
             .map { it.toModel() }
     }
@@ -26,13 +25,6 @@ object MedicineRepository {
         MedicineTable
             .select(MedicineTable.id)
             .where { MedicineTable.id eq id }
-            .count() > 0
-    }
-
-    fun existsByName(name: String): Boolean = transaction {
-        MedicineTable
-            .select(MedicineTable.id)
-            .where { MedicineTable.name.upperCase() like "%${name.uppercase()}%" }
             .count() > 0
     }
 
@@ -45,10 +37,10 @@ object MedicineRepository {
     }
 
     fun findByName(inName: String, page: Int, limit: Int): List<Medicine> = transaction {
-        val name = inName.replace("_", "\\_").replace("%", "\\%")
+        val name = inName.escapeTemplates()
         MedicineTable
             .selectAll()
-            .pages(page, limit)
+            .paginate(page, limit)
             .where { MedicineTable.name.upperCase() like "%${name.uppercase()}%" }
             .orderBy(MedicineTable.name)
             .map { it.toModel() }
@@ -73,6 +65,7 @@ object MedicineRepository {
         medicine.copy(id = id.value)
     }
 
+    // TODO: handle missing IDs
     fun update(medicine: Medicine): Medicine = transaction {
         require(medicine.id != null) { "No ID specified" }
         MedicineTable
@@ -90,14 +83,6 @@ object MedicineRepository {
 
     fun deleteAll(): Unit = transaction {
         MedicineTable.deleteAll()
-    }
-
-    private fun Query.pages(page: Int, limit: Int): Query {
-        val actualLimit = if (limit > MAX_LIMIT) MAX_LIMIT else limit
-        this
-            .limit(actualLimit)
-            .offset((actualLimit * page).toLong())
-        return this
     }
 
     private fun ResultRow.toModel(): Medicine = Medicine(this[MedicineTable.name], this[MedicineTable.id].value)
