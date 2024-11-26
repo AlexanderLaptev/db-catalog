@@ -44,10 +44,13 @@ object MedicineRepository {
             .firstOrNull()
     }
 
-    fun findByName(name: String): List<Medicine> = transaction {
+    fun findByName(inName: String, page: Int, limit: Int): List<Medicine> = transaction {
+        val name = inName.replace("_", "\\_").replace("%", "\\%")
         MedicineTable
             .selectAll()
+            .pages(page, limit)
             .where { MedicineTable.name.upperCase() like "%${name.uppercase()}%" }
+            .orderBy(MedicineTable.name)
             .map { it.toModel() }
     }
 

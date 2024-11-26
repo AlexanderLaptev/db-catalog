@@ -10,6 +10,11 @@ import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import ru.trfx.catalog.response.ErrorResponse
 
+private const val DEFAULT_LIMIT = 20
+
+private val RoutingCall.requestedPage get() = this.queryParameters["page"]?.toIntOrNull() ?: 0
+private val RoutingCall.requestedLimit get() = this.queryParameters["limit"]?.toIntOrNull() ?: DEFAULT_LIMIT
+
 fun Application.medicineRoutes() {
     routing {
         route("/api/medicine") {
@@ -25,9 +30,7 @@ fun Application.medicineRoutes() {
 
 private fun Route.getAllMedicinesRoute() {
     get("/all") {
-        val page = call.queryParameters["page"]?.toInt() ?: 0
-        val limit = call.queryParameters["limit"]?.toInt() ?: 20
-        val result = MedicineRepository.getAll(page, limit)
+        val result = MedicineRepository.getAll(call.requestedPage, call.requestedLimit)
         call.respond(HttpStatusCode.OK, result)
     }
 }
@@ -66,7 +69,7 @@ private fun Route.findMedicineByNameRoute() {
                 call.respond(HttpStatusCode.OK, result)
             }
         } else {
-            val result = MedicineRepository.findByName(name)
+            val result = MedicineRepository.findByName(name, call.requestedPage, call.requestedLimit)
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -134,3 +137,4 @@ private fun Route.deleteMedicineRoute() {
         call.respond(HttpStatusCode.NoContent)
     }
 }
+

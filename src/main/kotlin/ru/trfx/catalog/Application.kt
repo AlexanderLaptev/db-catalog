@@ -7,6 +7,8 @@ import io.ktor.server.plugins.contentnegotiation.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import ru.trfx.catalog.medicine.Medicine
+import ru.trfx.catalog.medicine.MedicineRepository
 import ru.trfx.catalog.medicine.MedicineTable
 import ru.trfx.catalog.medicine.medicineRoutes
 
@@ -41,5 +43,14 @@ private fun configureDatabase() {
         SchemaUtils.create(
             MedicineTable,
         )
+    }
+
+    addMockData()
+}
+
+private fun addMockData() {
+    repeat(200) {
+        val m = Medicine("Medicine #${it + 1}")
+        MedicineRepository.save(m)
     }
 }
