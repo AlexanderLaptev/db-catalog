@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="/styles/main.css"/>
+    <link rel="stylesheet" href="/styles/tabulator/tabulator.min.css">
+    <title th:text="${title}">Table Title</title>
+</head>
+
+<body>
+    <script type="text/javascript" src="/scripts/tabulator/tabulator.min.js"></script>
+    <script type="text/javascript" src="/scripts/table.js"></script>
+    <h1 th:text="${title}">Table Title</h1>
+    <div id="table"></div>
+</body>
+</html>

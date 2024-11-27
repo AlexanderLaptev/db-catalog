@@ -4,9 +4,12 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.application.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
+import io.ktor.server.routing.*
+import io.ktor.server.thymeleaf.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import ru.trfx.catalog.medicine.Medicine
 import ru.trfx.catalog.medicine.MedicineRepository
 import ru.trfx.catalog.medicine.MedicineTable
@@ -23,7 +26,10 @@ fun main(args: Array<String>) {
 @Suppress("unused")
 fun Application.main() {
     install(ContentNegotiation) { json() }
+    install(IgnoreTrailingSlash)
+
     configureDatabase()
+    configureTemplating()
 
     medicineRoutes()
     webAppRoutes()
@@ -54,5 +60,15 @@ private fun addMockData() {
     repeat(200) {
         val m = Medicine("Medicine #${it + 1}")
         MedicineRepository.save(m)
+    }
+}
+
+private fun Application.configureTemplating() {
+    install(Thymeleaf) {
+        setTemplateResolver(ClassLoaderTemplateResolver().apply {
+            prefix = "templates/thymeleaf/"
+            suffix = ".html"
+            characterEncoding = "utf-8"
+        })
     }
 }
