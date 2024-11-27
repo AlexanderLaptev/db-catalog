@@ -9,11 +9,9 @@ import io.ktor.server.routing.*
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import ru.trfx.catalog.response.ErrorResponse
+import ru.trfx.catalog.util.requestedLimit
+import ru.trfx.catalog.util.requestedPage
 
-private const val DEFAULT_LIMIT = 20
-
-private val RoutingCall.requestedPage get() = this.queryParameters["page"]?.toIntOrNull() ?: 0
-private val RoutingCall.requestedLimit get() = this.queryParameters["limit"]?.toIntOrNull() ?: DEFAULT_LIMIT
 
 fun Application.medicineRoutes() {
     routing {

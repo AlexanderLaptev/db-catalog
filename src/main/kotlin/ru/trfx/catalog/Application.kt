@@ -11,6 +11,7 @@ import ru.trfx.catalog.medicine.Medicine
 import ru.trfx.catalog.medicine.MedicineRepository
 import ru.trfx.catalog.medicine.MedicineTable
 import ru.trfx.catalog.medicine.medicineRoutes
+import ru.trfx.catalog.webapp.webAppRoutes
 
 lateinit var db: Database
     private set
@@ -25,6 +26,7 @@ fun Application.main() {
     configureDatabase()
 
     medicineRoutes()
+    webAppRoutes()
 }
 
 private fun configureDatabase() {
