@@ -1,6 +1,5 @@
 package ru.trfx.catalog.webapp
 
-import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.http.content.*
 import io.ktor.server.response.*
@@ -28,8 +27,15 @@ private fun Route.indexRoute() {
 private fun Route.medicineRoute() {
     route("/medicines") {
         get {
-//            call.respond(ThymeleafContent("table", mapOf("title" to "Medicines")))
-            call.respondText(getPageContent("/html/table.html"), ContentType.parse("text/html"))
+            call.respond(
+                ThymeleafContent(
+                    "table",
+                    mapOf(
+                        "title" to "Medicines",
+                        "initScript" to "/scripts/init/medicines.js",
+                    )
+                )
+            )
         }
     }
 }
