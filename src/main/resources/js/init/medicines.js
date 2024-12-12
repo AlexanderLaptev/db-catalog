@@ -1,5 +1,7 @@
-var table = new Tabulator("#main-table", {
+var table = new Tabulator('#main-table', {
     height:'85vh',
+    pagination:true,
+    paginationMode:'remote',
     ajaxURL:'http://localhost:8080/api/medicine/all',
     layout:'fitDataStretch',
     columns: [

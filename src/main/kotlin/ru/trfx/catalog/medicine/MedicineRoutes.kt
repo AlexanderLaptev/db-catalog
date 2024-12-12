@@ -9,8 +9,9 @@ import io.ktor.server.routing.*
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import ru.trfx.catalog.response.ErrorResponse
-import ru.trfx.catalog.util.requestedLimit
-import ru.trfx.catalog.util.requestedPage
+import ru.trfx.catalog.response.PageResponse
+import ru.trfx.catalog.util.pageSize
+import ru.trfx.catalog.util.page
 
 
 fun Application.medicineRoutes() {
@@ -28,8 +29,10 @@ fun Application.medicineRoutes() {
 
 private fun Route.getAllMedicinesRoute() {
     get("/all") {
-        val result = MedicineRepository.getAll(call.requestedPage, call.requestedLimit)
-        call.respond(HttpStatusCode.OK, result)
+        val pageSize = call.pageSize
+        val pageCount = MedicineRepository.getPageCount(pageSize)
+        val data = MedicineRepository.getAll(call.page, pageSize)
+        call.respond(HttpStatusCode.OK, PageResponse(pageCount, data))
     }
 }
 
@@ -67,7 +70,7 @@ private fun Route.findMedicineByNameRoute() {
                 call.respond(HttpStatusCode.OK, result)
             }
         } else {
-            val result = MedicineRepository.findByName(name, call.requestedPage, call.requestedLimit)
+            val result = MedicineRepository.findByName(name, call.page, call.pageSize)
             call.respond(HttpStatusCode.OK, result)
         }
 

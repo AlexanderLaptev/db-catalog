@@ -1,15 +1,14 @@
 package ru.trfx.catalog.util
 
 import org.jetbrains.exposed.sql.Query
+import kotlin.math.max
 
-const val MAX_PAGE_SIZE = 200
-
-fun Query.paginate(page: Int, limit: Int): Query {
-//    val actualLimit = if (limit > MAX_PAGE_SIZE) MAX_PAGE_SIZE else limit
-    val actualLimit = limit
+fun Query.paginate(inPage: Int, inSize: Int): Query {
+    val page = max(0, inPage - 1)
+    val size = clamp(inSize, PageConstants.MIN_PAGE_SIZE, PageConstants.MAX_PAGE_SIZE)
     this
-        .limit(actualLimit)
-        .offset((actualLimit * page).toLong())
+        .limit(size)
+        .offset((page * size).toLong())
     return this
 }
 
