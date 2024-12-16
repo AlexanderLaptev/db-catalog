@@ -12,17 +12,25 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import ru.trfx.catalog.company.Company
 import ru.trfx.catalog.company.CompanyRepository
+import ru.trfx.catalog.company.CompanyRoutes
 import ru.trfx.catalog.company.CompanyTable
-import ru.trfx.catalog.company.companyRoutes
 import ru.trfx.catalog.medicine.Medicine
 import ru.trfx.catalog.medicine.MedicineRepository
+import ru.trfx.catalog.medicine.MedicineRoutes
 import ru.trfx.catalog.medicine.MedicineTable
-import ru.trfx.catalog.medicine.medicineRoutes
+import ru.trfx.catalog.pharmacy.PharmacyRoutes
+import ru.trfx.catalog.route.AbstractRoutes
 import ru.trfx.catalog.webapp.webAppRoutes
 import java.util.*
 
 lateinit var db: Database
     private set
+
+private val routes = listOf<AbstractRoutes<*>>(
+    MedicineRoutes,
+    CompanyRoutes,
+    PharmacyRoutes
+)
 
 fun main(args: Array<String>) {
     EngineMain.main(args)
@@ -36,8 +44,7 @@ fun Application.main() {
     configureDatabase()
     configureTemplating()
 
-    medicineRoutes()
-    companyRoutes()
+    for (route in routes) route.addRoutes(this)
     webAppRoutes()
 }
 

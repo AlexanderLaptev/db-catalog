@@ -16,6 +16,7 @@ val RoutingCall.page: Int
             1
         }
     }
+
 val RoutingCall.pageSize: Int
     get() {
         val value = this.queryParameters["size"] ?: return DEFAULT_PAGE_SIZE

@@ -27,7 +27,7 @@ abstract class AbstractRepository<T : IdEntity>(
         val data = table
             .selectAll()
             .paginate(page, pageSize)
-            .orderBy(nameColumn ?: table.id)
+            .orderBy(nameColumn)
             .map { it.toModel() }
         PageResponse(pageCount, data)
     }

@@ -5,10 +5,10 @@ import java.util.*
 
 @kotlinx.serialization.Serializable
 data class Company(
-    val name: String,
+    override val name: String,
     val countryCode: String,
     override val id: Long? = null,
-): IdEntity {
+) : IdEntity {
     companion object {
         val COUNTRY_CODES: Array<String> = Locale.getISOCountries()
     }
