@@ -14,10 +14,10 @@ import ru.trfx.catalog.util.getPageCount
 import ru.trfx.catalog.util.paginate
 
 object CompanyRepository {
-    fun getAll(page: Int, limit: Int): List<Company> = transaction {
+    fun getAll(page: Int, size: Int): List<Company> = transaction {
         CompanyTable
             .selectAll()
-            .paginate(page, limit)
+            .paginate(page, size)
             .orderBy(CompanyTable.id)
             .map { it.toModel() }
     }
@@ -39,11 +39,11 @@ object CompanyRepository {
             .firstOrNull()
     }
 
-    fun findByName(inName: String, page: Int, limit: Int): List<Company> = transaction {
+    fun findByName(inName: String, page: Int, size: Int): List<Company> = transaction {
         val name = inName.escapeTemplates()
         CompanyTable
             .selectAll()
-            .paginate(page, limit)
+            .paginate(page, size)
             .where { CompanyTable.name.upperCase() like "%${name.uppercase()}%" }
             .orderBy(CompanyTable.name)
             .map { it.toModel() }
@@ -55,6 +55,15 @@ object CompanyRepository {
             .where { CompanyTable.name.upperCase() eq name.uppercase() }
             .map { it.toModel() }
             .firstOrNull()
+    }
+
+    fun findByCountry(countryCode: String, page: Int, size: Int): List<Company> = transaction {
+        CompanyTable
+            .selectAll()
+            .paginate(page, size)
+            .where { CompanyTable.country.upperCase() eq countryCode.uppercase() }
+            .orderBy(CompanyTable.name)
+            .map { it.toModel() }
     }
 
     // TODO: look into skipping IDs after a constraint violation
