@@ -72,7 +72,7 @@ private fun addMockData() {
     val country = Locale.getISOCountries()
     repeat(100) {
         val c = Company("Company #${it + 1}", country.random())
-        CompanyRepository.save(c)
+        CompanyRepository.create(c)
     }
 }
 

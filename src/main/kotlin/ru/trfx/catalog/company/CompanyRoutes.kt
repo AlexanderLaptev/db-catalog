@@ -29,9 +29,8 @@ fun Application.companyRoutes() {
 private fun Route.getAllCompaniesRoute() {
     get("/all") {
         val pageSize = call.pageSize
-        val pageCount = CompanyRepository.getPageCount(pageSize)
-        val data = CompanyRepository.getAll(call.page, pageSize)
-        call.respond(HttpStatusCode.OK, PageResponse(pageCount, data))
+        val response = CompanyRepository.getAll(call.page, pageSize)
+        call.respond(HttpStatusCode.OK, response)
     }
 }
 
@@ -69,7 +68,7 @@ private fun Route.findCompanyByNameRoute() {
                 call.respond(HttpStatusCode.OK, result)
             }
         } else {
-            val result = CompanyRepository.findByName(name, call.page, call.pageSize)
+            val result = CompanyRepository.findByNameFuzzy(name, call.page, call.pageSize)
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -85,7 +84,7 @@ private fun Route.createCompanyRoute() {
                 return@post
             }
 
-            val result = CompanyRepository.save(company)
+            val result = CompanyRepository.create(company)
             call.respond(HttpStatusCode.Created, result)
         } catch (e: BadRequestException) {
             call.application.log.trace("Handled exception: ", e)

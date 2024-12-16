@@ -1,13 +1,14 @@
 package ru.trfx.catalog.company
 
+import ru.trfx.catalog.repository.IdEntity
 import java.util.*
 
 @kotlinx.serialization.Serializable
 data class Company(
     val name: String,
     val countryCode: String,
-    val id: Long? = null,
-) {
+    override val id: Long? = null,
+): IdEntity {
     companion object {
         val COUNTRY_CODES: Array<String> = Locale.getISOCountries()
     }
