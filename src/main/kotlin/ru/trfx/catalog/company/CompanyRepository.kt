@@ -9,8 +9,8 @@ import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.upperCase
-import ru.trfx.catalog.util.escapeTemplates
-import ru.trfx.catalog.util.getPageCount
+import ru.trfx.catalog.util.countPages
+import ru.trfx.catalog.util.escapeSqlTemplates
 import ru.trfx.catalog.util.paginate
 
 object CompanyRepository {
@@ -22,7 +22,7 @@ object CompanyRepository {
             .map { it.toModel() }
     }
 
-    fun getPageCount(pageSize: Int): Int = CompanyTable.getPageCount(pageSize)
+    fun getPageCount(pageSize: Int): Int = countPages(CompanyTable.selectAll().count(), pageSize)
 
     fun existsById(id: Long): Boolean = transaction {
         CompanyTable
@@ -40,7 +40,7 @@ object CompanyRepository {
     }
 
     fun findByName(inName: String, page: Int, size: Int): List<Company> = transaction {
-        val name = inName.escapeTemplates()
+        val name = inName.escapeSqlTemplates()
         CompanyTable
             .selectAll()
             .paginate(page, size)

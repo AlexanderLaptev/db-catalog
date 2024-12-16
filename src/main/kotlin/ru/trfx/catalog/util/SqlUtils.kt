@@ -1,10 +1,6 @@
 package ru.trfx.catalog.util
 
-import org.jetbrains.exposed.dao.id.LongIdTable
 import org.jetbrains.exposed.sql.Query
-import org.jetbrains.exposed.sql.Table
-import org.jetbrains.exposed.sql.selectAll
-import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.math.ceil
 import kotlin.math.max
 
@@ -17,12 +13,8 @@ fun Query.paginate(inPage: Int, inSize: Int): Query {
     return this
 }
 
-fun Table.getPageCount(pageSize: Int) = transaction {
-    val count = this@getPageCount
-        .selectAll()
-        .count()
-    ceil(count.toFloat() / pageSize.toFloat()).toInt()
-}
+fun countPages(matchCount: Long, pageSize: Int) =
+    ceil(matchCount.toFloat() / pageSize.toFloat()).toInt()
 
-fun String.escapeTemplates(): String =
+fun String.escapeSqlTemplates(): String =
     this.replace("_", "\\_").replace("%", "\\%")

@@ -9,7 +9,6 @@ import io.ktor.server.routing.*
 import org.h2.jdbc.JdbcSQLIntegrityConstraintViolationException
 import org.jetbrains.exposed.exceptions.ExposedSQLException
 import ru.trfx.catalog.response.ErrorResponse
-import ru.trfx.catalog.response.PageResponse
 import ru.trfx.catalog.util.pageSize
 import ru.trfx.catalog.util.page
 
@@ -29,9 +28,8 @@ fun Application.medicineRoutes() {
 private fun Route.getAllMedicinesRoute() {
     get("/all") {
         val pageSize = call.pageSize
-        val pageCount = MedicineRepository.getPageCount(pageSize)
-        val data = MedicineRepository.getAll(call.page, pageSize)
-        call.respond(HttpStatusCode.OK, PageResponse(pageCount, data))
+        val response = MedicineRepository.getAll(call.page, pageSize)
+        call.respond(HttpStatusCode.OK, response)
     }
 }
 
@@ -69,7 +67,7 @@ private fun Route.findMedicineByNameRoute() {
                 call.respond(HttpStatusCode.OK, result)
             }
         } else {
-            val result = MedicineRepository.findByName(name, call.page, call.pageSize)
+            val result = MedicineRepository.findByNameFuzzy(name, call.page, call.pageSize)
             call.respond(HttpStatusCode.OK, result)
         }
 
@@ -85,7 +83,7 @@ private fun Route.createMedicineRoute() {
                 return@post
             }
 
-            val result = MedicineRepository.save(medicine)
+            val result = MedicineRepository.create(medicine)
             call.respond(HttpStatusCode.Created, result)
         } catch (e: BadRequestException) {
             call.application.log.trace("Handled exception: ", e)

@@ -1,7 +1,9 @@
 package ru.trfx.catalog.medicine
 
+import ru.trfx.catalog.repository.IdEntity
+
 @kotlinx.serialization.Serializable
 data class Medicine(
     val name: String,
-    val id: Long? = null,
-)
+    override val id: Long? = null,
+) : IdEntity

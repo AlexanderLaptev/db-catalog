@@ -66,7 +66,7 @@ private fun configureDatabase() {
 private fun addMockData() {
     repeat(200) {
         val m = Medicine("Medicine #${it + 1}")
-        MedicineRepository.save(m)
+        MedicineRepository.create(m)
     }
 
     val country = Locale.getISOCountries()
