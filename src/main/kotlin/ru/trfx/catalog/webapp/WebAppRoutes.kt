@@ -38,6 +38,20 @@ private fun Route.medicineRoute() {
             )
         }
     }
+
+    route("/companies") {
+        get {
+            call.respond(
+                ThymeleafContent(
+                    "table",
+                    mapOf(
+                        "title" to "Companies",
+                        "initScript" to "/scripts/init/companies.js"
+                    )
+                )
+            )
+        }
+    }
 }
 
 private fun getPageContent(path: String): String = object {}.javaClass.getResource(path)!!.readText()
