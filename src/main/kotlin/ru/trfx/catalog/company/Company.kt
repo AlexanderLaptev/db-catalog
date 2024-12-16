@@ -9,7 +9,7 @@ data class Company(
     val id: Long? = null,
 ) {
     companion object {
-        val COUNTRY_CODES: Array<String> = Locale.getISOCountries()
+        private val COUNTRY_CODES: Array<String> = Locale.getISOCountries()
     }
 
     init {

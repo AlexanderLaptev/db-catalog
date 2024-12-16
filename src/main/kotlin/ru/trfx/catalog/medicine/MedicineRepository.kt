@@ -10,8 +10,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.upperCase
 import ru.trfx.catalog.util.escapeTemplates
+import ru.trfx.catalog.util.getPageCount
 import ru.trfx.catalog.util.paginate
-import kotlin.math.ceil
 
 object MedicineRepository {
     fun getAll(page: Int, pageSize: Int): List<Medicine> = transaction {
@@ -22,12 +22,7 @@ object MedicineRepository {
             .map { it.toModel() }
     }
 
-    fun getPageCount(pageSize: Int): Int = transaction {
-        val count = MedicineTable
-            .select(MedicineTable.id)
-            .count()
-        ceil(count.toFloat() / pageSize.toFloat()).toInt()
-    }
+    fun getPageCount(pageSize: Int) = MedicineTable.getPageCount(pageSize)
 
     fun existsById(id: Long): Boolean = transaction {
         MedicineTable

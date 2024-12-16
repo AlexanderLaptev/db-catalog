@@ -10,11 +10,16 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
+import ru.trfx.catalog.company.Company
+import ru.trfx.catalog.company.CompanyRepository
+import ru.trfx.catalog.company.CompanyTable
+import ru.trfx.catalog.company.companyRoutes
 import ru.trfx.catalog.medicine.Medicine
 import ru.trfx.catalog.medicine.MedicineRepository
 import ru.trfx.catalog.medicine.MedicineTable
 import ru.trfx.catalog.medicine.medicineRoutes
 import ru.trfx.catalog.webapp.webAppRoutes
+import java.util.*
 
 lateinit var db: Database
     private set
@@ -32,6 +37,7 @@ fun Application.main() {
     configureTemplating()
 
     medicineRoutes()
+    companyRoutes()
     webAppRoutes()
 }
 
@@ -50,6 +56,7 @@ private fun configureDatabase() {
     transaction {
         SchemaUtils.create(
             MedicineTable,
+            CompanyTable,
         )
     }
 
@@ -60,6 +67,12 @@ private fun addMockData() {
     repeat(200) {
         val m = Medicine("Medicine #${it + 1}")
         MedicineRepository.save(m)
+    }
+
+    val country = Locale.getISOCountries()
+    repeat(100) {
+        val c = Company("Company #${it + 1}", country.random())
+        CompanyRepository.save(c)
     }
 }
 

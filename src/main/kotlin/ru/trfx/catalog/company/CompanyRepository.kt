@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.upperCase
 import ru.trfx.catalog.util.escapeTemplates
+import ru.trfx.catalog.util.getPageCount
 import ru.trfx.catalog.util.paginate
 
 object CompanyRepository {
@@ -20,6 +21,8 @@ object CompanyRepository {
             .orderBy(CompanyTable.id)
             .map { it.toModel() }
     }
+
+    fun getPageCount(pageSize: Int): Int = CompanyTable.getPageCount(pageSize)
 
     fun existsById(id: Long): Boolean = transaction {
         CompanyTable
@@ -61,6 +64,7 @@ object CompanyRepository {
         val id = CompanyTable
             .insertAndGetId {
                 it[name] = company.name
+                it[country] = company.countryCode
             }
         company.copy(id = id.value)
     }

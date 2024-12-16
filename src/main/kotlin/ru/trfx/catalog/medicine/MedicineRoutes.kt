@@ -13,7 +13,6 @@ import ru.trfx.catalog.response.PageResponse
 import ru.trfx.catalog.util.pageSize
 import ru.trfx.catalog.util.page
 
-
 fun Application.medicineRoutes() {
     routing {
         route("/api/medicine") {
