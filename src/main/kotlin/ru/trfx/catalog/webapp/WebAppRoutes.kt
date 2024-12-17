@@ -12,7 +12,7 @@ fun Application.webAppRoutes() {
         staticResources("/styles", "css")
 
         indexRoute()
-        medicineRoute()
+        tableRoutes()
     }
 }
 
@@ -24,34 +24,23 @@ private fun Route.indexRoute() {
     }
 }
 
-private fun Route.medicineRoute() {
-    route("/medicines") {
-        get {
-            call.respond(
-                ThymeleafContent(
-                    "table",
-                    mapOf(
-                        "title" to "Medicines",
-                        "initScript" to "/scripts/init/medicines.js",
-                    )
-                )
-            )
-        }
-    }
+private fun Route.tableRoutes() {
+    tablePageRoute("medicines", "Medicines")
+    tablePageRoute("companies", "Companies")
+    tablePageRoute("pharmacies", "Pharmacies")
+}
 
-    route("/companies") {
+private fun Route.tablePageRoute(pathRoot: String, title: String) {
+    route("/$pathRoot") {
         get {
             call.respond(
                 ThymeleafContent(
-                    "table",
-                    mapOf(
-                        "title" to "Companies",
-                        "initScript" to "/scripts/init/companies.js"
+                    "table", mapOf(
+                        "title" to title,
+                        "initScript" to "/scripts/init/${pathRoot}.js"
                     )
                 )
             )
         }
     }
 }
-
-private fun getPageContent(path: String): String = object {}.javaClass.getResource(path)!!.readText()
