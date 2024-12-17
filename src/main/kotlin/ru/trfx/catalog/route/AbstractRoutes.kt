@@ -31,9 +31,13 @@ abstract class AbstractRoutes<T : IdEntity>(
                 insertRoute()
                 updateRoute()
                 deleteRoute()
+
+                customRoutes(this)
             }
         }
     }
+
+    protected open fun customRoutes(route: Route) = Unit
 
     protected open fun Route.getAllRoute() {
         get("/all") {
