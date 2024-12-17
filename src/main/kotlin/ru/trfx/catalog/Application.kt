@@ -10,18 +10,15 @@ import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
-import ru.trfx.catalog.company.Company
-import ru.trfx.catalog.company.CompanyRepository
 import ru.trfx.catalog.company.CompanyRoutes
 import ru.trfx.catalog.company.CompanyTable
-import ru.trfx.catalog.medicine.Medicine
-import ru.trfx.catalog.medicine.MedicineRepository
 import ru.trfx.catalog.medicine.MedicineRoutes
 import ru.trfx.catalog.medicine.MedicineTable
+import ru.trfx.catalog.mock.MockDataGenerator
 import ru.trfx.catalog.pharmacy.PharmacyRoutes
+import ru.trfx.catalog.pharmacy.PharmacyTable
 import ru.trfx.catalog.route.AbstractRoutes
 import ru.trfx.catalog.webapp.webAppRoutes
-import java.util.*
 
 lateinit var db: Database
     private set
@@ -64,22 +61,10 @@ private fun configureDatabase() {
         SchemaUtils.create(
             MedicineTable,
             CompanyTable,
+            PharmacyTable,
         )
-    }
 
-    addMockData()
-}
-
-private fun addMockData() {
-    repeat(200) {
-        val m = Medicine("Medicine #${it + 1}")
-        MedicineRepository.create(m)
-    }
-
-    val country = Locale.getISOCountries()
-    repeat(100) {
-        val c = Company("Company #${it + 1}", country.random())
-        CompanyRepository.create(c)
+        MockDataGenerator.generateMockData()
     }
 }
 
