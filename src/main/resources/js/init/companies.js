@@ -6,7 +6,7 @@ var table = new Tabulator('#main-table', {
     layout:'fitDataStretch',
     columns: [
         {title:'ID', field:'id'},
-        {title:'Country', field:'countryCode'},
+        {title:'Country', field:'country_code'},
         {title:'Name', field:'name'},
     ],
 });

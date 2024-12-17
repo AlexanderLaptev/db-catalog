@@ -1,5 +1,6 @@
 package ru.trfx.catalog.pharmacy
 
+import kotlinx.serialization.SerialName
 import ru.trfx.catalog.repository.IdEntity
 
 @kotlinx.serialization.Serializable
@@ -7,7 +8,7 @@ data class Pharmacy(
     override val name: String,
     val latitude: Double,
     val longitude: Double,
-    val websiteUrl: String? = null,
+    @SerialName("website") val websiteUrl: String? = null,
     override val id: Long? = null,
 ) : IdEntity {
     init {
