@@ -7,6 +7,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
+import org.jetbrains.exposed.sql.transactions.transaction
 import ru.trfx.catalog.repository.AbstractRepository
 import ru.trfx.catalog.repository.IdEntity
 import ru.trfx.catalog.response.ErrorResponse
@@ -36,7 +37,7 @@ abstract class AbstractRoutes<T : IdEntity>(
 
     protected open fun Route.getAllRoute() {
         get("/all") {
-            val pageResponse = repository.getAll(call.page, call.pageSize)
+            val pageResponse = transaction { repository.getAll(call.page, call.pageSize) }
             val json = Json.encodeToJsonElement(PageResponse.serializer(serializer), pageResponse)
             call.respond(HttpStatusCode.OK, json)
         }
@@ -50,7 +51,7 @@ abstract class AbstractRoutes<T : IdEntity>(
                 return@get
             }
 
-            val entity = repository.findById(id)
+            val entity = transaction { repository.findById(id) }
             if (entity != null) {
                 val json = Json.encodeToJsonElement(serializer, entity)
                 call.respond(HttpStatusCode.OK, json)
@@ -68,7 +69,7 @@ abstract class AbstractRoutes<T : IdEntity>(
                 return@get
             }
 
-            val entity = repository.findByNameExact(name)
+            val entity = transaction { repository.findByNameExact(name) }
             if (entity != null) {
                 val json = Json.encodeToJsonElement(serializer, entity)
                 call.respond(HttpStatusCode.OK, json)
@@ -86,7 +87,7 @@ abstract class AbstractRoutes<T : IdEntity>(
                 return@post
             }
 
-            repository.create(entity)
+            transaction { repository.create(entity) }
             call.respond(HttpStatusCode.NoContent)
         }
     }
@@ -99,14 +100,12 @@ abstract class AbstractRoutes<T : IdEntity>(
                 return@put
             }
 
-            val exists = repository.existsById(updateEntity.id!!)
-            if (!exists) {
-                call.respond(HttpStatusCode.NotFound)
-                return@put
+            var exists = false
+            transaction {
+                exists = repository.existsById(updateEntity.id!!)
+                if (exists) repository.update(updateEntity)
             }
-
-            repository.update(updateEntity)
-            call.respond(HttpStatusCode.NoContent)
+            call.respond(if (exists) HttpStatusCode.NoContent else HttpStatusCode.NotFound)
         }
     }
 
@@ -118,7 +117,7 @@ abstract class AbstractRoutes<T : IdEntity>(
                 return@delete
             }
 
-            repository.deleteById(id)
+            transaction { repository.deleteById(id) }
             call.respond(HttpStatusCode.NoContent)
         }
     }
