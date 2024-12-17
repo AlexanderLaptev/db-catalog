@@ -11,11 +11,12 @@
 <script type="text/javascript" src="/scripts/tabulator/tabulator.min.js"></script>
 <script type="text/javascript" th:attr="src=${initScript}"></script>
 
-<h1>
-    <a href="/" style="font-size:1.0rem;">&lt; back</a>
-    <span th:text="${title}">Table Title</span>
-</h1>
-<div id="table-container">
+<div id="container">
+    <h1>
+        <a href="/" style="font-size:1.0rem;">&lt; back</a>
+        <span th:text="${title}">Table Title</span>
+    </h1>
+
     <div id="main-table"></div>
 </div>
 
