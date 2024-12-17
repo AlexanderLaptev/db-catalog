@@ -22,13 +22,14 @@ abstract class AbstractRepository<T : IdEntity>(
     val nameColumn: Column<String>,
 ) {
     open fun getAll(page: Int, pageSize: Int): PageResponse<T> {
-        val pageCount = countPages(table.selectAll().count(), pageSize)
+        val lastRow = table.selectAll().count()
+        val lastPage = countPages(lastRow, pageSize)
         val data = table
             .selectAll()
             .paginate(page, pageSize)
             .orderBy(nameColumn)
             .map { it.toModel() }
-        return PageResponse(pageCount, data)
+        return PageResponse(lastPage, lastRow, data)
     }
 
     open fun findById(id: Long): T? {
@@ -49,7 +50,8 @@ abstract class AbstractRepository<T : IdEntity>(
     open fun findByNameFuzzy(fuzzyName: String, page: Int, pageSize: Int): PageResponse<T> {
         val name = fuzzyName.escapeSqlTemplates()
         val expression = nameColumn.upperCase() like "%${name.uppercase()}%"
-        val pageCount = countPages(table.selectAll().where(expression).count(), pageSize)
+        val lastRow = table.selectAll().where(expression).count()
+        val lastPage = countPages(lastRow, pageSize)
 
         val data = table
             .selectAll()
@@ -58,7 +60,7 @@ abstract class AbstractRepository<T : IdEntity>(
             .orderBy(nameColumn)
             .map { it.toModel() }
 
-        return PageResponse(pageCount, data)
+        return PageResponse(lastPage, lastRow, data)
     }
 
     open fun findByNameExact(exactName: String): T? {

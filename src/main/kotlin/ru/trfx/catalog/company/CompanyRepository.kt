@@ -21,7 +21,8 @@ object CompanyRepository : AbstractRepository<Company>(
         Company(this[CompanyTable.name], this[CompanyTable.countryCode], this[CompanyTable.id].value)
 
     fun findByCountry(countryCode: String, page: Int, pageSize: Int): PageResponse<Company> {
-        val pageCount = countPages(CompanyTable.selectAll().count(), pageSize)
+        val lastRow = CompanyTable.selectAll().count()
+        val lastPage = countPages(lastRow, pageSize)
         val data = CompanyTable
             .selectAll()
             .paginate(page, pageSize)
@@ -29,6 +30,6 @@ object CompanyRepository : AbstractRepository<Company>(
             .orderBy(nameColumn)
             .map { it.toModel() }
 
-        return PageResponse(pageCount, data)
+        return PageResponse(lastPage, lastRow, data)
     }
 }

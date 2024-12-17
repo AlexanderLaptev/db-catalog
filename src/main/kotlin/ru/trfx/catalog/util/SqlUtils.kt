@@ -14,7 +14,7 @@ fun Query.paginate(inPage: Int, inSize: Int): Query {
 }
 
 fun countPages(matchCount: Long, pageSize: Int) =
-    ceil(matchCount.toFloat() / pageSize.toFloat()).toInt()
+    ceil(matchCount.toFloat() / pageSize.toFloat()).toLong()
 
 fun String.escapeSqlTemplates(): String =
     this.replace("_", "\\_").replace("%", "\\%")
