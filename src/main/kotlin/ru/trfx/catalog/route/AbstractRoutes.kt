@@ -49,9 +49,9 @@ abstract class AbstractRoutes<T : IdEntity>(
 
     protected open fun Route.findByIdRoute() {
         get("/byId/{id}") {
-            val id = call.pathParameters["id"]?.toLongOrNull()
+            val id = call.pathParameters["id"]!!.toLongOrNull()
             if (id == null) {
-                call.respond(HttpStatusCode.BadRequest)
+                call.respond(HttpStatusCode.BadRequest, ErrorResponse("Malformed ID"))
                 return@get
             }
 
@@ -67,12 +67,7 @@ abstract class AbstractRoutes<T : IdEntity>(
 
     protected open fun Route.findByNameRoute() {
         get("/byName/{name}") {
-            val name = call.pathParameters["name"]
-            if (name == null) {
-                call.respond(HttpStatusCode.BadRequest)
-                return@get
-            }
-
+            val name = call.pathParameters["name"]!!
             val entity = transaction { repository.findByNameExact(name) }
             if (entity != null) {
                 val json = Json.encodeToJsonElement(serializer, entity)
@@ -115,9 +110,9 @@ abstract class AbstractRoutes<T : IdEntity>(
 
     protected open fun Route.deleteRoute() {
         delete("/{id}") {
-            val id = call.pathParameters["id"]?.toLongOrNull()
+            val id = call.pathParameters["id"]!!.toLongOrNull()
             if (id == null) {
-                call.respond(HttpStatusCode.BadRequest)
+                call.respond(HttpStatusCode.BadRequest, ErrorResponse("Malformed ID"))
                 return@delete
             }
 
