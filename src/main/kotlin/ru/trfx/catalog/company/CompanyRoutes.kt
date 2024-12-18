@@ -20,6 +20,7 @@ object CompanyRoutes : AbstractRoutes<Company>(
     override fun customRoutes(route: Route) {
         with(route) {
             findByCountryRoute()
+            findByMedicineIdRoute()
         }
     }
 
@@ -32,8 +33,20 @@ object CompanyRoutes : AbstractRoutes<Company>(
             }
 
             val response = transaction { CompanyRepository.findByCountry(country, call.page, call.pageSize) }
-            val json = Json.encodeToJsonElement(PageResponse.serializer(serializer), response)
-            call.respond(HttpStatusCode.OK, json)
+            call.respond(HttpStatusCode.OK, response)
+        }
+    }
+
+    private fun Route.findByMedicineIdRoute() {
+        get("/byMedicine/{id}") {
+            val id = call.pathParameters["id"]!!.toLongOrNull()
+            if (id == null) {
+                call.respond(HttpStatusCode.BadRequest, ErrorResponse("Malformed ID"))
+                return@get
+            }
+
+            val response = transaction { CompanyRepository.findByMedicineId(id, call.page, call.pageSize) }
+            call.respond(HttpStatusCode.OK, response)
         }
     }
 }

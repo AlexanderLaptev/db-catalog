@@ -2,6 +2,7 @@ package ru.trfx.catalog.mock
 
 import ru.trfx.catalog.company.Company
 import ru.trfx.catalog.company.CompanyRepository
+import ru.trfx.catalog.manufacturer.MedicineManufacturerRepository
 import ru.trfx.catalog.medicine.Medicine
 import ru.trfx.catalog.medicine.MedicineRepository
 import ru.trfx.catalog.pharmacy.Pharmacy
@@ -38,6 +39,13 @@ object MockDataGenerator {
 
         for (name in medicineNames) MedicineRepository.create(Medicine(name))
         for (name in companyNames) CompanyRepository.create(Company(name, countries.random(random)))
+
+        repeat(companyNames.size) {
+            val indices = medicineNames.indices.asSequence().shuffled(random).take(random.nextInt(4, 10)).map { it + 1 }
+            for (id in indices) {
+                MedicineManufacturerRepository.addManufacturer(id.toLong(), (it + 1).toLong())
+            }
+        }
 
         val pharmacyCount = 300
         repeat(pharmacyCount) {

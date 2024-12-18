@@ -12,6 +12,8 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import ru.trfx.catalog.company.CompanyRoutes
 import ru.trfx.catalog.company.CompanyTable
+import ru.trfx.catalog.manufacturer.MedicineManufacturerTable
+import ru.trfx.catalog.manufacturer.medicineManufacturerRoutes
 import ru.trfx.catalog.medicine.MedicineRoutes
 import ru.trfx.catalog.medicine.MedicineTable
 import ru.trfx.catalog.mock.MockDataGenerator
@@ -42,6 +44,7 @@ fun Application.main() {
     configureTemplating()
 
     for (route in routes) route.addRoutes(this)
+    medicineManufacturerRoutes()
     webAppRoutes()
 }
 
@@ -62,6 +65,7 @@ private fun configureDatabase() {
             MedicineTable,
             CompanyTable,
             PharmacyTable,
+            MedicineManufacturerTable,
         )
 
         MockDataGenerator.generateMockData()
