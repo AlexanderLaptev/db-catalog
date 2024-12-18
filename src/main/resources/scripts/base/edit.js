@@ -15,16 +15,18 @@ async function onPageLoaded() {
 async function loadEntityJson() {
     const entityJson = await fetch(`/api/${API_PATH}/byId/${ENTITY_ID}`, {
         method: "GET",
-        headers: { "Content-type": "application/json; charset=UTF-8" },
+        headers: JSON_HEADERS,
     }).then((response) => response.json());
-    
+    updateTitleAndHeading(entityJson);
+    updatePage(entityJson);
+}
+
+function updateTitleAndHeading(entityJson) {
     const name = entityJson["name"];
     const title = `Editing ${name}`;
     const heading = `${title} [${ENTITY_ID}]`;
     document.title = title;
     document.getElementById("heading").innerText = heading;
-
-    updatePage(entityJson);
 }
 
 async function handleResponse(response) {

@@ -16,6 +16,11 @@ const columns = [
     // { title: "Company Country", field: "company_country" },
 ];
 
+function rowClickHandler(event, row) {
+    const data = row.getData();
+    location.href = `/${API_PATH}/edit?medicine=${data.medicine_id}&company=${data.company_id}`;
+}
+
 // async function ajaxResponse(url, params, response) {
 //     for (const entity of response["data"]) {
 //         const medicineId = entity["medicine_id"];

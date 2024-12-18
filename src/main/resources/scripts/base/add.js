@@ -1,10 +1,10 @@
 const METHOD = "POST";
 
-deleteButton.style.display = "none";
-document.title = `Adding ${NAME}`;
-heading.innerText = document.title;
-
 async function onPageLoaded() {
+    deleteButton.style.display = "none";
+    document.title = `Adding ${NAME}`;
+    heading.innerText = document.title;
+
     setupHeaderButtons();
 }
 

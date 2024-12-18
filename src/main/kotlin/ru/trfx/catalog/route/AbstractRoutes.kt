@@ -127,20 +127,18 @@ abstract class AbstractRoutes<T : IdEntity>(
                 return@put
             }
 
-            var exists = false
+            var found = false
             try {
                 transaction {
-                    exists = repository.existsById(entity.id!!)
-                    if (exists) repository.update(entity)
-                    repository.update(entity)
+                    found = repository.existsById(entity.id!!)
+                    if (found) repository.update(entity)
                 }
             } catch (e: SQLException) {
                 call.respond(HttpStatusCode.BadRequest, ErrorResponse("Illegal object data"))
                 return@put
             }
 
-            call.respond(if (exists) HttpStatusCode.NoContent else HttpStatusCode.NotFound)
-            call.respond(HttpStatusCode.NoContent)
+            call.respond(if (found) HttpStatusCode.NoContent else HttpStatusCode.NotFound)
         }
     }
 
