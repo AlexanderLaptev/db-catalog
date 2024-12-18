@@ -1,4 +1,4 @@
 const columns = [
-    {title:'ID', field:'id'},
-    {title:'Name', field:'name'},
+    { title: "ID", field: "id" },
+    { title: "Name", field: "name" },
 ]
