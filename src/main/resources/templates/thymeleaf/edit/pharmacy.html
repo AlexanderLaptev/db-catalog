@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Page Title</title>
     <link rel="stylesheet" href="/styles/main.css"/>
     <link rel="stylesheet" href="/styles/edit.css"/>
-    <script type="text/javascript" src="/scripts/edit/pharmacy.js" defer></script>
-    <script type="text/javascript" src="/scripts/edit/base.js" defer></script>
+    <script type="text/javascript" th:src="|/scripts/${root}/${script}.js|" defer></script>
+    <script type="text/javascript" th:src="|/scripts/${root}/base.js|" defer></script>
 </head>
 
 <body onload="onPageLoaded()">

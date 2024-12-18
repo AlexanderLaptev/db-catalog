@@ -7,6 +7,8 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.trfx.catalog.repository.AbstractRepository
 import ru.trfx.catalog.repository.IdEntity
@@ -88,8 +90,9 @@ abstract class AbstractRoutes<T : IdEntity>(
                 return@post
             }
 
-            transaction { repository.create(entity) }
-            call.respond(HttpStatusCode.NoContent)
+            val id = transaction { repository.create(entity) }
+            val json = JsonObject(mapOf("id" to JsonPrimitive(id)))
+            call.respond(HttpStatusCode.OK, json)
         }
     }
 
@@ -97,6 +100,7 @@ abstract class AbstractRoutes<T : IdEntity>(
         put {
             val updateEntity = call.receive(entityClass)
             try {
+                require(updateEntity.id != null) { "No ID specified" }
                 validateEntityOrThrow(updateEntity)
             } catch (e: Exception) {
                 call.respond(HttpStatusCode.BadRequest, ErrorResponse(e.message ?: "Unknown error"))
@@ -112,9 +116,7 @@ abstract class AbstractRoutes<T : IdEntity>(
         }
     }
 
-    protected open fun validateEntityOrThrow(entity: T) {
-        require(entity.id != null) { "No ID specified" }
-    }
+    protected open fun validateEntityOrThrow(entity: T) = Unit
 
     protected open fun Route.deleteRoute() {
         delete("/{id}") {

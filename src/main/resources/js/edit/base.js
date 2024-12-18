@@ -32,7 +32,7 @@ form.addEventListener("submit", async (event) => {
         body: JSON.stringify(updateEntity),
         headers: { "Content-type": "application/json; charset=UTF-8" },
     });
-    responseLabel.style.display = "block";
+    responseLabel.style.display = "inline";
     if (response.ok) {
         responseLabel.style.color = "green";
         responseLabel.innerText = "Success!";

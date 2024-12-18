@@ -58,7 +58,6 @@ private fun Route.tablePageRoute(pathRoot: String, title: String) {
 }
 
 // TODO: cleanup!
-// TODO: use templates for script names
 private fun Route.editRoutes() {
     editPageRoute("company", CompanyRepository)
     editPageRoute("medicine", MedicineRepository)
@@ -80,7 +79,15 @@ private fun Route.editPageRoute(pathRoot: String, repository: AbstractRepository
                 return@get
             }
 
-            call.respond(ThymeleafContent("/edit/$pathRoot", mapOf("script" to pathRoot)))
+            call.respond(
+                ThymeleafContent(
+                    "/edit/$pathRoot",
+                    mapOf(
+                        "root" to "edit",
+                        "script" to pathRoot,
+                    )
+                )
+            )
         }
     }
 }
@@ -112,4 +119,23 @@ private fun Route.deleteRoute(pathRoot: String, repository: AbstractRepository<*
 }
 
 private fun Route.addRoutes() {
+    addRoute("company")
+    addRoute("medicine")
+    addRoute("pharmacy")
+}
+
+private fun Route.addRoute(pathRoot: String) {
+    route("/$pathRoot/add") {
+        get {
+            call.respond(
+                ThymeleafContent(
+                    "/edit/$pathRoot",
+                    mapOf(
+                        "root" to "add",
+                        "script" to pathRoot,
+                    )
+                )
+            )
+        }
+    }
 }
