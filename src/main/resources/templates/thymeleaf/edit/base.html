@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Editing Entity</title>
+
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/edit.css" />
+
+    <script th:inline="javascript" defer>
+        const API_PATH = /*[[${type}]]*/ "";
+        const NAME = /*[[${name}]]*/ "Entity";
+    </script>
+    <script th:src="|/scripts/base/add_edit_common.js|" defer></script>
+    <script th:src="|/scripts/base/${verb}.js|" defer></script>
+    <script th:src="|/scripts/${verb}/${type}.js|" defer></script>
+</head>
+
+<body onload="onPageLoaded()">
+    <h1>
+        <a id="back-button" class="header-button">&lt; back</a>
+        <span id="heading">Editing Entity</span>
+        <a id="delete-button" class="header-button">Delete</a>
+    </h1>
+
+    <form id="form">
+        <div th:replace="~{edit/forms :: ${type}}"></div>
+        <br /><input id="submit" type="submit" value="Save" />
+        <span id="response-label"></span>
+    </form>
+</body>
+
+</html>

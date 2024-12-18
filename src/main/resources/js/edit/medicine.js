@@ -1,17 +1,15 @@
-const apiPath = "medicine";
-
-const getUpdateEntity = (formParams) => ({
-    "id": entityId,
+const getEntityJsonFromForm = (formParams) => ({
+    "id": ENTITY_ID,
     "name": formParams.get("name"),
 });
 
 function updatePage(entityJson) {
-    const medicineName = entityJson["name"];
+    const name = entityJson["name"];
 
-    const title = `Editing ${medicineName}`;
-    const heading = `${title} (${entityId})`;
+    const title = `Editing ${name}`;
+    const heading = `${title} (${ENTITY_ID})`;
 
     document.title = title;
     document.getElementById("heading").innerText = heading;
-    document.getElementById("name").value = medicineName;
+    document.getElementById("name").value = name;
 }

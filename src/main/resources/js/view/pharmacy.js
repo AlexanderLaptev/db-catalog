@@ -1,5 +1,4 @@
-var apiRootName = 'pharmacy'
-var columns = [
+const columns = [
     {title:'ID', field:'id'},
     {title:'Name', field:'name'},
     {title:'Website', field:'website', formatter:'link'},

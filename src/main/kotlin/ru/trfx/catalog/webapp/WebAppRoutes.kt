@@ -14,6 +14,7 @@ import ru.trfx.catalog.repository.AbstractRepository
 
 fun Application.webAppRoutes() {
     routing {
+        // TODO: rename directories to be consistent with the URL
         staticResources("/scripts", "js")
         staticResources("/styles", "css")
 
@@ -40,16 +41,15 @@ private fun Route.tableRoutes() {
     tablePageRoute("pharmacy", "Pharmacies")
 }
 
-private fun Route.tablePageRoute(pathRoot: String, title: String) {
-    route("/$pathRoot/view") {
+private fun Route.tablePageRoute(type: String, title: String) {
+    route("/$type/view") {
         get {
             call.respond(
                 ThymeleafContent(
                     "table",
                     mapOf(
                         "title" to title,
-                        "path" to pathRoot,
-                        "initScript" to "/scripts/init/${pathRoot}.js"
+                        "type" to type,
                     )
                 )
             )
@@ -59,13 +59,13 @@ private fun Route.tablePageRoute(pathRoot: String, title: String) {
 
 // TODO: cleanup!
 private fun Route.editRoutes() {
-    editPageRoute("company", CompanyRepository)
-    editPageRoute("medicine", MedicineRepository)
-    editPageRoute("pharmacy", PharmacyRepository)
+    editPageRoute("medicine", "Medicine", MedicineRepository)
+    editPageRoute("company", "Company", CompanyRepository)
+    editPageRoute("pharmacy", "Pharmacy", PharmacyRepository)
 }
 
-private fun Route.editPageRoute(pathRoot: String, repository: AbstractRepository<*>) {
-    route("/$pathRoot/edit") {
+private fun Route.editPageRoute(type: String, name: String, repository: AbstractRepository<*>) {
+    route("/$type/edit") {
         get {
             val id = call.queryParameters["id"]?.toLongOrNull()
             if (id == null) {
@@ -81,10 +81,11 @@ private fun Route.editPageRoute(pathRoot: String, repository: AbstractRepository
 
             call.respond(
                 ThymeleafContent(
-                    "/edit/$pathRoot",
+                    "/edit/base",
                     mapOf(
-                        "root" to "edit",
-                        "script" to pathRoot,
+                        "verb" to "edit",
+                        "type" to type,
+                        "name" to name,
                     )
                 )
             )
@@ -93,8 +94,8 @@ private fun Route.editPageRoute(pathRoot: String, repository: AbstractRepository
 }
 
 private fun Route.deleteRoutes() {
-    deleteRoute("company", CompanyRepository)
     deleteRoute("medicine", MedicineRepository)
+    deleteRoute("company", CompanyRepository)
     deleteRoute("pharmacy", PharmacyRepository)
 }
 
@@ -119,20 +120,21 @@ private fun Route.deleteRoute(pathRoot: String, repository: AbstractRepository<*
 }
 
 private fun Route.addRoutes() {
-    addRoute("company")
-    addRoute("medicine")
-    addRoute("pharmacy")
+    addRoute("medicine", "Medicine")
+    addRoute("company", "Company")
+    addRoute("pharmacy", "Pharmacy")
 }
 
-private fun Route.addRoute(pathRoot: String) {
-    route("/$pathRoot/add") {
+private fun Route.addRoute(type: String, name: String) {
+    route("/$type/add") {
         get {
             call.respond(
                 ThymeleafContent(
-                    "/edit/$pathRoot",
+                    "/edit/base",
                     mapOf(
-                        "root" to "add",
-                        "script" to pathRoot,
+                        "verb" to "add",
+                        "type" to type,
+                        "name" to name,
                     )
                 )
             )

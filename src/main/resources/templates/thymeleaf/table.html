@@ -1,27 +1,30 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="/styles/main.css"/>
-    <link rel="stylesheet" href="/styles/tabulator/tabulator.min.css">
     <title th:text="${title}">Table Title</title>
+
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/tabulator/tabulator.min.css" />
+
+    <script src="/scripts/tabulator/tabulator.min.js" defer></script>
+    <script th:inline="javascript" defer>const API_PATH = /*[[${type}]]*/ "";</script>
+    <script th:src="|/scripts/view/${type}.js|" defer></script>
+    <script src="/scripts/base/view.js" defer></script>
 </head>
 
 <body>
-<script type="text/javascript" src="/scripts/tabulator/tabulator.min.js"></script>
-<script type="text/javascript" th:attr="src=${initScript}"></script>
+    <div id="container">
+        <h1>
+            <a href="/" class="header-button">&lt; back</a>
+            <span id="heading" th:text="${title}">Table Title</span>
+            <a th:href="|/${type}/add|" class="header-button">Add</a>
+        </h1>
 
-<div id="container">
-    <h1>
-        <a href="/" class="header-button">&lt; back</a>
-        <span id="heading" th:text="${title}">Table Title</span>
-        <a th:href="|/${path}/add|" class="header-button">Add</a>
-    </h1>
-
-    <div id="main-table"></div>
-</div>
-
-<script type="text/javascript" src="/scripts/init/base.js"></script>
-
+        <div id="main-table"></div>
+    </div>
 </body>
+
 </html>

@@ -1,8 +1,6 @@
-const apiPath = "pharmacy";
-
 // TODO: handle missing/empty websites
-const getUpdateEntity = (formParams) => ({
-    "id": entityId,
+const getEntityJsonFromForm = (formParams) => ({
+    "id": ENTITY_ID,
     "name": formParams.get("name"),
     "website": formParams.get("website"),
     "latitude": formParams.get("latitude"),
@@ -16,7 +14,7 @@ function updatePage(entityJson) {
     const longitude = entityJson["longitude"];
 
     const title = `Editing ${name}`;
-    const heading = `${title} (${entityId})`;
+    const heading = `${title} (${ENTITY_ID})`;
 
     document.title = title;
     document.getElementById("heading").innerText = heading;

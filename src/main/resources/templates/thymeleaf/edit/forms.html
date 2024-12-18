@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head></head>
+
+<body>
+    <div th:fragment="medicine">
+        <label for="name">Name:</label><br />
+        <input type="text" name="name" id="name" required /><br />
+    </div>
+
+    <div th:fragment="company">
+        <label for="name">Name:</label><br />
+        <input type="text" name="name" id="name" required /><br />
+
+        <label for="country">Country:</label><br />
+        <input type="text" name="country" id="country" required /><br />
+    </div>
+
+    <div th:fragment="pharmacy">
+        <label for="name">Name:</label><br />
+        <input type="text" name="name" id="name" required /><br />
+
+        <label for="website">Website:</label><br />
+        <input type="text" name="website" id="website" /><br />
+
+        <label for="latitude">Latitude:</label><br />
+        <input type="number" step="any" name="latitude" id="latitude" required /><br />
+
+        <label for="longitude">Longitude:</label><br />
+        <input type="number" step="any" name="longitude" id="longitude" required /><br />
+    </div>
+</body>
+
+</html>
