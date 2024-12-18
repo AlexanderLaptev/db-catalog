@@ -38,6 +38,7 @@ private fun Route.tableRoutes() {
     tablePageRoute("medicine", "Medicines")
     tablePageRoute("company", "Companies")
     tablePageRoute("pharmacy", "Pharmacies")
+    tablePageRoute("manufacturer", "Manufacturers")
 }
 
 private fun Route.tablePageRoute(type: String, title: String) {
@@ -56,7 +57,6 @@ private fun Route.tablePageRoute(type: String, title: String) {
     }
 }
 
-// TODO: cleanup!
 private fun Route.editRoutes() {
     editPageRoute("medicine", "Medicine", MedicineRepository)
     editPageRoute("company", "Company", CompanyRepository)

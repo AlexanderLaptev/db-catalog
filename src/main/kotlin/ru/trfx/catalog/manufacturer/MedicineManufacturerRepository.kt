@@ -6,8 +6,30 @@ import org.jetbrains.exposed.sql.deleteAll
 import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.selectAll
+import ru.trfx.catalog.response.PageResponse
+import ru.trfx.catalog.util.countPages
+import ru.trfx.catalog.util.paginate
 
 object MedicineManufacturerRepository {
+    fun getAll(page: Int, pageSize: Int): PageResponse<MedicineManufacturerRelation> {
+        val lastRow = MedicineManufacturerTable.selectAll().count()
+        val lastPage = countPages(lastRow, pageSize)
+
+        val data = MedicineManufacturerTable
+            .selectAll()
+            .paginate(page, pageSize)
+            .orderBy(MedicineManufacturerTable.companyId)
+            .orderBy(MedicineManufacturerTable.medicineId)
+            .map {
+                MedicineManufacturerRelation(
+                    it[MedicineManufacturerTable.medicineId].value,
+                    it[MedicineManufacturerTable.companyId].value
+                )
+            }
+
+        return PageResponse(lastPage, lastRow, data)
+    }
+
     fun addManufacturer(medicineId: Long, companyId: Long): Int {
         return MedicineManufacturerTable
             .insert {

@@ -1,10 +1,11 @@
 package ru.trfx.catalog.company
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import ru.trfx.catalog.repository.IdEntity
 import java.util.*
 
-@kotlinx.serialization.Serializable
+@Serializable
 data class Company(
     override val name: String,
     @SerialName("country_code") val countryCode: String,

@@ -1,6 +1,8 @@
 package ru.trfx.catalog.response
 
-@kotlinx.serialization.Serializable
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ErrorResponse(
     val error: String,
 )
