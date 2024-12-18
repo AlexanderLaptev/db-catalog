@@ -6,6 +6,7 @@ import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import io.ktor.server.routing.*
 import io.ktor.server.thymeleaf.*
+import io.ktor.util.logging.*
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -40,7 +41,7 @@ fun Application.main() {
     install(ContentNegotiation) { json() }
     install(IgnoreTrailingSlash)
 
-    configureDatabase()
+    configureDatabase(log)
     configureTemplating()
 
     for (route in routes) route.addRoutes(this)
@@ -48,7 +49,7 @@ fun Application.main() {
     webAppRoutes()
 }
 
-private fun configureDatabase() {
+private fun configureDatabase(logger: Logger) {
     db = Database.connect(
         arrayOf(
             "jdbc:h2:mem:regular",
@@ -68,7 +69,7 @@ private fun configureDatabase() {
             MedicineManufacturerTable,
         )
 
-        MockDataGenerator.generateMockData()
+        MockDataGenerator.generateMockData(logger)
     }
 }
 

@@ -1,5 +1,6 @@
 package ru.trfx.catalog.mock
 
+import io.ktor.util.logging.*
 import ru.trfx.catalog.company.Company
 import ru.trfx.catalog.company.CompanyRepository
 import ru.trfx.catalog.manufacturer.MedicineManufacturerRepository
@@ -34,20 +35,23 @@ object MockDataGenerator {
 
     private val countries = listOf("RU", "US", "GB", "FR", "CN")
 
-    fun generateMockData() {
+    fun generateMockData(logger: Logger) {
         val random = Random(81646)
 
         for (name in medicineNames) MedicineRepository.create(Medicine(name))
         for (name in companyNames) CompanyRepository.create(Company(name, countries.random(random)))
 
+        var count = medicineNames.size + companyNames.size
         repeat(companyNames.size) {
             val indices = medicineNames.indices.asSequence().shuffled(random).take(random.nextInt(4, 10)).map { it + 1 }
             for (id in indices) {
                 MedicineManufacturerRepository.addManufacturer(id.toLong(), (it + 1).toLong())
+                count++
             }
         }
 
         val pharmacyCount = 300
+        count += pharmacyCount
         repeat(pharmacyCount) {
             val websiteUrl: String? = if (random.nextBoolean()) {
                 "https://pharmacy.example.com/${it + 1}"
@@ -63,5 +67,6 @@ object MockDataGenerator {
             )
             PharmacyRepository.create(pharmacy)
         }
+        logger.info("Created $count entities total.")
     }
 }
