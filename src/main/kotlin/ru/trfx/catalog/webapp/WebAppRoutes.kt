@@ -13,6 +13,8 @@ import ru.trfx.catalog.medicine.MedicineRepository
 import ru.trfx.catalog.pharmacy.PharmacyRepository
 import ru.trfx.catalog.repository.AbstractRepository
 import ru.trfx.catalog.response.ErrorResponse
+import ru.trfx.catalog.stock.StockRepository
+import ru.trfx.catalog.stock.StockTable
 
 fun Application.webAppRoutes() {
     routing {
@@ -40,6 +42,7 @@ private fun Route.tableRoutes() {
     tablePageRoute("company", "Companies")
     tablePageRoute("pharmacy", "Pharmacies")
     tablePageRoute("manufacturer", "Manufacturers")
+    tablePageRoute("stock", "Stocks")
 }
 
 private fun Route.tablePageRoute(type: String, title: String) {
@@ -62,6 +65,7 @@ private fun Route.editRoutes() {
     editPageRoute("pharmacy", "Pharmacy", PharmacyRepository)
 
     editManufacturerRoute()
+    editStockRoute()
 }
 
 private fun Route.editPageRoute(type: String, name: String, repository: AbstractRepository<*>) {
@@ -124,12 +128,46 @@ private fun Route.editManufacturerRoute() {
     }
 }
 
+private fun Route.editStockRoute() {
+    get("/stock/edit") {
+        val medicineId = call.queryParameters["medicine"]!!.toLongOrNull()
+        if (medicineId == null) {
+            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Malformed ID"))
+            return@get
+        }
+
+        val pharmacy = call.queryParameters["pharmacy"]!!.toLongOrNull()
+        if (pharmacy == null) {
+            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Malformed ID"))
+            return@get
+        }
+
+        val exists = transaction { StockRepository.find(medicineId, pharmacy) != null }
+        if (!exists) {
+            call.respond(HttpStatusCode.NotFound)
+            return@get
+        }
+
+        call.respond(
+            ThymeleafContent(
+                "/edit/base",
+                mapOf(
+                    "verb" to "edit",
+                    "type" to "stock",
+                    "name" to "Stock",
+                )
+            )
+        )
+    }
+}
+
 private fun Route.deleteRoutes() {
     deleteRoute("medicine", MedicineRepository)
     deleteRoute("company", CompanyRepository)
     deleteRoute("pharmacy", PharmacyRepository)
 
     deleteManufacturerRoute()
+    deleteStockRoute()
 }
 
 private fun Route.deleteRoute(pathRoot: String, repository: AbstractRepository<*>) {
@@ -178,11 +216,40 @@ private fun Route.deleteManufacturerRoute() {
     }
 }
 
+private fun Route.deleteStockRoute() {
+    get("/stock/delete") {
+        val medicineId = call.queryParameters["medicine"]!!.toLongOrNull()
+        if (medicineId == null) {
+            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Malformed ID"))
+            return@get
+        }
+
+        val pharmacyId = call.queryParameters["pharmacy"]!!.toLongOrNull()
+        if (pharmacyId == null) {
+            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Malformed ID"))
+            return@get
+        }
+
+        var found = false
+        transaction {
+            found = StockRepository.find(medicineId, pharmacyId) != null
+            if (found) StockRepository.delete(medicineId, pharmacyId)
+        }
+
+        if (!found) {
+            call.respond(HttpStatusCode.NotFound)
+        } else {
+            call.respondRedirect("/stock/view")
+        }
+    }
+}
+
 private fun Route.addRoutes() {
     addRoute("medicine", "Medicine")
     addRoute("company", "Company")
     addRoute("pharmacy", "Pharmacy")
     addRoute("manufacturer", "Manufacturer")
+    addRoute("stock", "Stock")
 }
 
 private fun Route.addRoute(type: String, name: String) {

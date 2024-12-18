@@ -21,16 +21,13 @@ import ru.trfx.catalog.mock.MockDataGenerator
 import ru.trfx.catalog.pharmacy.PharmacyRoutes
 import ru.trfx.catalog.pharmacy.PharmacyTable
 import ru.trfx.catalog.route.AbstractRoutes
+import ru.trfx.catalog.stock.StockTable
+import ru.trfx.catalog.stock.stockRoutes
 import ru.trfx.catalog.webapp.webAppRoutes
 
 lateinit var db: Database
     private set
 
-private val routes = listOf<AbstractRoutes<*>>(
-    MedicineRoutes,
-    CompanyRoutes,
-    PharmacyRoutes
-)
 
 fun main(args: Array<String>) {
     EngineMain.main(args)
@@ -44,8 +41,15 @@ fun Application.main() {
     configureDatabase(log)
     configureTemplating()
 
+    val routes = listOf<AbstractRoutes<*>>(
+        MedicineRoutes,
+        CompanyRoutes,
+        PharmacyRoutes
+    )
     for (route in routes) route.addRoutes(this)
+
     medicineManufacturerRoutes()
+    stockRoutes()
     webAppRoutes()
 }
 
@@ -67,6 +71,7 @@ private fun configureDatabase(logger: Logger) {
             CompanyTable,
             PharmacyTable,
             MedicineManufacturerTable,
+            StockTable,
         )
 
         MockDataGenerator.generateMockData(logger)

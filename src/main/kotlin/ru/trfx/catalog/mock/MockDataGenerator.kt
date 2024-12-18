@@ -8,6 +8,8 @@ import ru.trfx.catalog.medicine.Medicine
 import ru.trfx.catalog.medicine.MedicineRepository
 import ru.trfx.catalog.pharmacy.Pharmacy
 import ru.trfx.catalog.pharmacy.PharmacyRepository
+import ru.trfx.catalog.stock.Stock
+import ru.trfx.catalog.stock.StockRepository
 import kotlin.random.Random
 
 object MockDataGenerator {
@@ -35,6 +37,7 @@ object MockDataGenerator {
 
     private val countries = listOf("RU", "US", "GB", "FR", "CN")
 
+    // TODO: refactor?
     fun generateMockData(logger: Logger) {
         val random = Random(81646)
 
@@ -43,8 +46,8 @@ object MockDataGenerator {
 
         var count = medicineNames.size + companyNames.size
         repeat(companyNames.size) {
-            val indices = medicineNames.indices.asSequence().shuffled(random).take(random.nextInt(4, 10)).map { it + 1 }
-            for (id in indices) {
+            val ids = medicineNames.indices.asSequence().shuffled(random).take(random.nextInt(4, 10)).map { it + 1 }
+            for (id in ids) {
                 MedicineManufacturerRepository.addManufacturer(id.toLong(), (it + 1).toLong())
                 count++
             }
@@ -67,6 +70,21 @@ object MockDataGenerator {
             )
             PharmacyRepository.create(pharmacy)
         }
+
+        repeat(pharmacyCount) {
+            val ids = medicineNames.indices.asSequence().shuffled(random).take(random.nextInt(4, 10)).map { it + 1 }
+            for (id in ids) {
+                val stock = Stock(
+                    id.toLong(),
+                    (it + 1).toLong(),
+                    random.nextInt(0, 30),
+                    random.nextInt(6, 120) * 5.0,
+                )
+                StockRepository.create(stock)
+                count++
+            }
+        }
+
         logger.info("Created $count entities total.")
     }
 }
