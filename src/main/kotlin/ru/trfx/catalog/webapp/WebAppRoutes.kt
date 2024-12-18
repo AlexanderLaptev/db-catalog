@@ -14,9 +14,8 @@ import ru.trfx.catalog.repository.AbstractRepository
 
 fun Application.webAppRoutes() {
     routing {
-        // TODO: rename directories to be consistent with the URL
-        staticResources("/scripts", "js")
-        staticResources("/styles", "css")
+        staticResources("/scripts", "scripts")
+        staticResources("/styles", "styles")
 
         indexRoute()
         tableRoutes()
