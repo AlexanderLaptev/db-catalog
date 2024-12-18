@@ -13,8 +13,9 @@
 
 <div id="container">
     <h1>
-        <a href="/" style="font-size:1.0rem;">&lt; back</a>
-        <span th:text="${title}">Table Title</span>
+        <a href="/" class="header-button">&lt; back</a>
+        <span id="heading" th:text="${title}">Table Title</span>
+        <a th:href="|/${path}/add|" class="header-button">Add</a>
     </h1>
 
     <div id="main-table"></div>

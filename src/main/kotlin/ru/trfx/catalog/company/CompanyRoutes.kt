@@ -36,4 +36,9 @@ object CompanyRoutes : AbstractRoutes<Company>(
             call.respond(HttpStatusCode.OK, json)
         }
     }
+
+    override fun validateEntityOrThrow(entity: Company) {
+        super.validateEntityOrThrow(entity)
+        require(entity.countryCode.uppercase() in Company.COUNTRY_CODES) { "Country must be a valid 2-letter ISO country" }
+    }
 }

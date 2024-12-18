@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Page Title</title>
+    <link rel="stylesheet" href="/styles/main.css"/>
+    <link rel="stylesheet" href="/styles/edit.css"/>
+    <script type="text/javascript" src="/scripts/edit/company.js" defer></script>
+    <script type="text/javascript" src="/scripts/edit/base.js" defer></script>
+</head>
+
+<body onload="onPageLoaded()">
+<h1>
+    <a href="/company/view" class="header-button">&lt; back</a>
+    <span id="heading">Editing Company</span>
+    <a id="delete-button" class="header-button">Delete</a>
+</h1>
+
+<form id="form">
+    <label for="name">Name:</label><br/>
+    <input type="text" name="name" id="name" required/><br/>
+
+    <label for="country">Country:</label><br/>
+    <input type="text" name="country" id="country" required/><br/>
+
+    <br/><input id="submit" type="submit" value="Save"/>
+    <span id="response"></span>
+</form>
+
+</body>
+</html>

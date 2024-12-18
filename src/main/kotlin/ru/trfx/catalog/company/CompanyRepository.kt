@@ -8,6 +8,7 @@ import ru.trfx.catalog.response.PageResponse
 import ru.trfx.catalog.util.countPages
 import ru.trfx.catalog.util.paginate
 
+// TODO: handle bad country codes
 object CompanyRepository : AbstractRepository<Company>(
     CompanyTable,
     CompanyTable.name

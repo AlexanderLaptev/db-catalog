@@ -14,5 +14,5 @@ var table = new Tabulator('#main-table', {
 
 table.on('rowClick', function (e, row) {
     var id = row.getData().id;
-    location.href = 'http://localhost:8080/edit/' + apiRootName + '/' + id;
+    location.href = 'http://localhost:8080/' + apiRootName + '/edit?id=' + id;
 });

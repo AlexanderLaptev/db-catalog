@@ -81,8 +81,10 @@ abstract class AbstractRoutes<T : IdEntity>(
     protected open fun Route.insertRoute() {
         post {
             val entity = call.receive(entityClass)
-            if (entity.id != null) {
-                call.respond(HttpStatusCode.BadRequest, ErrorResponse("Body must not contain ID"))
+            try {
+                validateEntityOrThrow(entity)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, ErrorResponse(e.message ?: "Unknown error"))
                 return@post
             }
 
@@ -94,8 +96,10 @@ abstract class AbstractRoutes<T : IdEntity>(
     protected open fun Route.updateRoute() {
         put {
             val updateEntity = call.receive(entityClass)
-            if (updateEntity.id == null) {
-                call.respond(HttpStatusCode.BadRequest, ErrorResponse("No ID specified"))
+            try {
+                validateEntityOrThrow(updateEntity)
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.BadRequest, ErrorResponse(e.message ?: "Unknown error"))
                 return@put
             }
 
@@ -106,6 +110,10 @@ abstract class AbstractRoutes<T : IdEntity>(
             }
             call.respond(if (exists) HttpStatusCode.NoContent else HttpStatusCode.NotFound)
         }
+    }
+
+    protected open fun validateEntityOrThrow(entity: T) {
+        require(entity.id != null) { "No ID specified" }
     }
 
     protected open fun Route.deleteRoute() {
