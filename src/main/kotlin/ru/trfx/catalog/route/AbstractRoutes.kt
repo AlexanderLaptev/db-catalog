@@ -16,6 +16,7 @@ import ru.trfx.catalog.response.ErrorResponse
 import ru.trfx.catalog.response.PageResponse
 import ru.trfx.catalog.util.page
 import ru.trfx.catalog.util.pageSize
+import java.sql.SQLException
 import kotlin.reflect.KClass
 
 abstract class AbstractRoutes<T : IdEntity>(
@@ -40,6 +41,24 @@ abstract class AbstractRoutes<T : IdEntity>(
     }
 
     protected open fun customRoutes(route: Route) = Unit
+
+    private suspend fun receiveAndValidateEntity(call: RoutingCall): T? {
+        val entity = try {
+            call.receive(entityClass)
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Invalid object body format"))
+            return null
+        }
+
+        try {
+            entity.validate()
+        } catch (e: Exception) {
+            call.respond(HttpStatusCode.BadRequest, ErrorResponse(e.message ?: "Unknown error"))
+            return null
+        }
+
+        return entity
+    }
 
     protected open fun Route.getAllRoute() {
         get("/all") {
@@ -82,15 +101,19 @@ abstract class AbstractRoutes<T : IdEntity>(
 
     protected open fun Route.insertRoute() {
         post {
-            val entity = call.receive(entityClass)
-            try {
-                validateEntityOrThrow(entity)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, ErrorResponse(e.message ?: "Unknown error"))
+            val entity = receiveAndValidateEntity(call) ?: return@post
+            if (entity.id != null) {
+                call.respond(HttpStatusCode.BadRequest, ErrorResponse("ID cannot be assigned explicitly"))
                 return@post
             }
 
-            val id = transaction { repository.create(entity) }
+            val id = try {
+                transaction { repository.create(entity) }
+            } catch (e: SQLException) {
+                call.respond(HttpStatusCode.BadRequest, ErrorResponse("Illegal object data"))
+                return@post
+            }
+
             val json = JsonObject(mapOf("id" to JsonPrimitive(id)))
             call.respond(HttpStatusCode.OK, json)
         }
@@ -98,25 +121,23 @@ abstract class AbstractRoutes<T : IdEntity>(
 
     protected open fun Route.updateRoute() {
         put {
-            val updateEntity = call.receive(entityClass)
-            try {
-                require(updateEntity.id != null) { "No ID specified" }
-                validateEntityOrThrow(updateEntity)
-            } catch (e: Exception) {
-                call.respond(HttpStatusCode.BadRequest, ErrorResponse(e.message ?: "Unknown error"))
+            val entity = receiveAndValidateEntity(call) ?: return@put
+            if (entity.id == null) {
+                call.respond(HttpStatusCode.BadRequest, ErrorResponse("No ID specified"))
                 return@put
             }
 
+            // TODO: Handle errors
             var exists = false
             transaction {
-                exists = repository.existsById(updateEntity.id!!)
-                if (exists) repository.update(updateEntity)
+                exists = repository.existsById(entity.id!!)
+                if (exists) repository.update(entity)
+                repository.update(entity)
             }
             call.respond(if (exists) HttpStatusCode.NoContent else HttpStatusCode.NotFound)
+            call.respond(HttpStatusCode.NoContent)
         }
     }
-
-    protected open fun validateEntityOrThrow(entity: T) = Unit
 
     protected open fun Route.deleteRoute() {
         delete("/{id}") {

@@ -13,4 +13,8 @@ data class Company(
     companion object {
         val COUNTRY_CODES: Array<String> = Locale.getISOCountries()
     }
+
+    override fun validate() {
+        require(countryCode.uppercase() in COUNTRY_CODES) { "Country must be a valid 2-letter ISO country" }
+    }
 }

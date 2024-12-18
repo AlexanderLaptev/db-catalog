@@ -13,6 +13,6 @@ async function handleResponse(response) {
         const entityId = (await response.json())["id"];
         window.location.href = `/${API_PATH}/edit?id=${entityId}`;
     } else {
-        displayErrorMessage(reponse);
+        displayErrorMessage(response);
     }
 }
