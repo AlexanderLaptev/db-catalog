@@ -8,6 +8,9 @@ import io.ktor.server.routing.*
 import io.ktor.server.thymeleaf.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import ru.trfx.catalog.company.CompanyRepository
+import ru.trfx.catalog.medicine.MedicineRepository
+import ru.trfx.catalog.pharmacy.PharmacyRepository
+import ru.trfx.catalog.repository.AbstractRepository
 
 fun Application.webAppRoutes() {
     routing {
@@ -54,8 +57,16 @@ private fun Route.tablePageRoute(pathRoot: String, title: String) {
     }
 }
 
+// TODO: cleanup!
+// TODO: use templates for script names
 private fun Route.editRoutes() {
-    route("/company/edit") {
+    editPageRoute("company", CompanyRepository)
+    editPageRoute("medicine", MedicineRepository)
+    editPageRoute("pharmacy", PharmacyRepository)
+}
+
+private fun Route.editPageRoute(pathRoot: String, repository: AbstractRepository<*>) {
+    route("/$pathRoot/edit") {
         get {
             val id = call.queryParameters["id"]?.toLongOrNull()
             if (id == null) {
@@ -63,19 +74,25 @@ private fun Route.editRoutes() {
                 return@get
             }
 
-            val exists = transaction { CompanyRepository.existsById(id) }
+            val exists = transaction { repository.existsById(id) }
             if (!exists) {
                 call.respond(HttpStatusCode.NotFound)
                 return@get
             }
 
-            call.respond(ThymeleafContent("/edit/company", mapOf()))
+            call.respond(ThymeleafContent("/edit/$pathRoot", mapOf("script" to pathRoot)))
         }
     }
 }
 
 private fun Route.deleteRoutes() {
-    route("/company/delete") {
+    deleteRoute("company", CompanyRepository)
+    deleteRoute("medicine", MedicineRepository)
+    deleteRoute("pharmacy", PharmacyRepository)
+}
+
+private fun Route.deleteRoute(pathRoot: String, repository: AbstractRepository<*>) {
+    route("/$pathRoot/delete") {
         get {
             val id = call.queryParameters["id"]?.toLongOrNull()
             if (id == null) {
@@ -83,13 +100,13 @@ private fun Route.deleteRoutes() {
                 return@get
             }
 
-            val result = transaction { CompanyRepository.deleteById(id) }
+            val result = transaction { repository.deleteById(id) }
             if (!result) {
                 call.respond(HttpStatusCode.NotFound)
                 return@get
             }
 
-            call.respondRedirect("/company/view")
+            call.respondRedirect("/$pathRoot/view")
         }
     }
 }

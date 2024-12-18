@@ -13,6 +13,8 @@ function parseId() {
 
 async function onPageLoaded() {
     document.getElementById("delete-button").setAttribute("href", `/${apiPath}/delete?id=${entityId}`);
+    document.getElementById("back-button").setAttribute("href", `/${apiPath}/view`);
+
     const entityJson = await fetch(`/api/${apiPath}/byId/${entityId}`, {
         method: "GET",
         headers: { "Content-type": "application/json; charset=UTF-8" },
