@@ -41,10 +41,17 @@ object MockDataGenerator {
 
         val pharmacyCount = 300
         repeat(pharmacyCount) {
+            val websiteUrl: String? = if (random.nextBoolean()) {
+                "https://pharmacy.example.com/${it + 1}"
+            } else {
+                null
+            }
+
             val pharmacy = Pharmacy(
                 "Pharmacy #${it + 1}",
                 random.nextDouble(-90.0, 90.0),
                 random.nextDouble(0.0, 180.0),
+                websiteUrl,
             )
             PharmacyRepository.create(pharmacy)
         }
