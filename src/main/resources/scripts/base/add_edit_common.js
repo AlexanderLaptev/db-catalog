@@ -5,6 +5,21 @@ const deleteButton = document.getElementById("delete-button");
 const backButton = document.getElementById("back-button");
 
 hideResponseLabel();
+form.addEventListener("submit", handleSubmit);
+
+async function handleSubmit(event) {
+    event.preventDefault();
+
+    hideResponseLabel();
+    const formParams = new FormData(form);
+    const entityJson = getEntityJsonFromForm(formParams);
+    const response = await fetch(`/api/${API_PATH}`, {
+        method: METHOD,
+        body: JSON.stringify(entityJson),
+        headers: JSON_HEADERS,
+    });
+    handleResponse(response);
+}
 
 function setupHeaderButtons() {
     backButton.setAttribute("href", `/${API_PATH}/view`);
@@ -31,17 +46,3 @@ async function displayErrorMessage(response) {
     const json = await response.json();
     displayResponseMessage(`Error (${response.status}): ${json["error"]}`, "red");
 }
-
-form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const formParams = new FormData(form);
-    const entityJson = getEntityJsonFromForm(formParams);
-
-    hideResponseLabel();
-    const response = await fetch(`/api/${API_PATH}`, {
-        method: METHOD,
-        body: JSON.stringify(entityJson),
-        headers: { "Content-type": "application/json; charset=UTF-8" },
-    });
-    handleResponse(response);
-});

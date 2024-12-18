@@ -30,6 +30,14 @@
         <label for="longitude">Longitude:</label>
         <input type="number" step="any" name="longitude" id="longitude" required />
     </div>
+    
+    <div th:fragment="manufacturer">
+        <label for="medicine-id">Medicine ID:</label>
+        <input type="number" step="1" name="medicine-id" id="medicine-id" required />
+
+        <label for="company-id">Company ID:</label>
+        <input type="number" step="1" name="company-id" id="company-id" required />
+    </div>
 </body>
 
 </html>

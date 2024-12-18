@@ -14,7 +14,7 @@ const table = new Tabulator("#main-table", {
     columns: columns,
 });
 
-table.on("rowClick", (_, row) => {
+table.on("rowClick", typeof rowClickHandler !== "undefined" ? rowClickHandler : (_, row) => {
     const id = row.getData().id;
     location.href = `/${API_PATH}/edit?id=${id}`;
 });

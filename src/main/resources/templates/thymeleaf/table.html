@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="/styles/tabulator/tabulator.min.css" />
 
     <script src="/scripts/tabulator/tabulator.min.js" defer></script>
+    <script src="/scripts/utils.js"></script>
     <script th:inline="javascript" defer>const API_PATH = /*[[${type}]]*/ "";</script>
     <script th:src="|/scripts/view/${type}.js|" defer></script>
     <script src="/scripts/base/view.js" defer></script>
