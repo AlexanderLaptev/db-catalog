@@ -13,11 +13,6 @@ function updatePage(entityJson) {
     const latitude = entityJson["latitude"];
     const longitude = entityJson["longitude"];
 
-    const title = `Editing ${name}`;
-    const heading = `${title} (${ENTITY_ID})`;
-
-    document.title = title;
-    document.getElementById("heading").innerText = heading;
     document.getElementById("name").value = name;
     document.getElementById("latitude").value = latitude;
     document.getElementById("longitude").value = longitude;

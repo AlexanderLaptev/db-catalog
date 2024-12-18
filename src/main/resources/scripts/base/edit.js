@@ -17,6 +17,13 @@ async function loadEntityJson() {
         method: "GET",
         headers: { "Content-type": "application/json; charset=UTF-8" },
     }).then((response) => response.json());
+    
+    const name = entityJson["name"];
+    const title = `Editing ${name}`;
+    const heading = `${title} [${ENTITY_ID}]`;
+    document.title = title;
+    document.getElementById("heading").innerText = heading;
+
     updatePage(entityJson);
 }
 

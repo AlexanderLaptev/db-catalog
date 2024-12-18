@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
@@ -25,7 +25,7 @@
         <a id="delete-button" class="header-button">Delete</a>
     </h1>
 
-    <form id="form">
+    <form id="form" autocomplete="off">
         <div th:replace="~{edit/forms :: ${type}}"></div>
         <br /><input id="submit" type="submit" value="Save" />
         <span id="response-label"></span>

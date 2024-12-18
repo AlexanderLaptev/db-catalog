@@ -37,6 +37,7 @@ form.addEventListener("submit", async (event) => {
     const formParams = new FormData(form);
     const entityJson = getEntityJsonFromForm(formParams);
 
+    hideResponseLabel();
     const response = await fetch(`/api/${API_PATH}`, {
         method: METHOD,
         body: JSON.stringify(entityJson),

@@ -1,0 +1,36 @@
+input {
+    min-height: 2.2em;
+}
+
+input:not([type="submit"]) {
+    min-width: 30em;
+
+    padding: 6px;
+    padding-bottom: 0;
+
+    background-color: hsl(0 0% 92%);
+
+    border: none;
+    border-bottom-width: thin;
+    border-bottom-color: hsl(0 0% 75%);
+    border-bottom-style: solid;
+    
+    font-size: 14px;
+}
+
+input[type="submit"] {
+    min-width: 5em;
+    padding: 6px;
+
+    border: none;
+    border-radius: 0;
+
+    font-size: 1em;
+}
+
+label {
+    display: block;
+
+    margin-top: 12px;
+    margin-bottom: 2px;
+}
