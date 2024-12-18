@@ -28,8 +28,8 @@ function displaySuccessMessage() {
 }
 
 async function displayErrorMessage(response) {
-    const errorMessage = (await response.json())["error"];
-    displayResponseMessage(`Error: ${errorMessage}`, "red");
+    const json = await response.json();
+    displayResponseMessage(`Error (${response.status}): ${json["error"]}`, "red");
 }
 
 form.addEventListener("submit", async (event) => {

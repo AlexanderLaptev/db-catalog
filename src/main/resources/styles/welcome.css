@@ -1,0 +1,17 @@
+h1 {
+    font-size: 3em;
+    margin-bottom: 0.2em;
+}
+
+h2 {
+    font-size: 2.5em;
+}
+
+ol {
+    font-size: 1.5em;
+    margin-left: 0.6em;
+}
+
+ol > li {
+    margin: 1em 0;
+}
