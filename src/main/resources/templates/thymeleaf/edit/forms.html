@@ -5,11 +5,17 @@
 
 <body>
     <div th:fragment="medicine">
+        <label for="id">ID:</label>
+        <input type="number" step="1" name="id" id="id" readonly />
+
         <label for="name">Name:</label>
         <input type="text" name="name" id="name" required />
     </div>
 
     <div th:fragment="company">
+        <label for="id">ID:</label>
+        <input type="number" step="1" name="id" id="id" readonly />
+
         <label for="name">Name:</label>
         <input type="text" name="name" id="name" required /><br />
 
@@ -18,11 +24,14 @@
     </div>
 
     <div th:fragment="pharmacy">
+        <label for="id">ID:</label>
+        <input type="number" step="1" name="id" id="id" readonly />
+
         <label for="name">Name:</label>
         <input type="text" name="name" id="name" required />
 
         <label for="website">Website:</label>
-        <input type="text" name="website" id="website" />
+        <input type="text" name="website" id="website" placeholder="Empty"/>
 
         <label for="latitude">Latitude:</label>
         <input type="number" step="any" name="latitude" id="latitude" required />
@@ -30,27 +39,27 @@
         <label for="longitude">Longitude:</label>
         <input type="number" step="any" name="longitude" id="longitude" required />
     </div>
-    
+
     <div th:fragment="manufacturer">
         <label for="medicine-id">Medicine ID:</label>
-        <input type="number" step="1" name="medicine-id" id="medicine-id" required />
+        <input type="number" step="1" name="medicine-id" id="medicine-id" readonly />
 
         <label for="company-id">Company ID:</label>
-        <input type="number" step="1" name="company-id" id="company-id" required />
+        <input type="number" step="1" name="company-id" id="company-id" readonly />
     </div>
 
     <div th:fragment="stock">
         <label for="medicine-id">Medicine ID:</label>
-        <input type="number" step="1" name="medicine-id" id="medicine-id" required />
+        <input type="number" step="1" name="medicine-id" id="medicine-id" readonly />
 
         <label for="pharmacy-id">Pharmacy ID:</label>
-        <input type="number" step="1" name="pharmacy-id" id="pharmacy-id" required />
-        
+        <input type="number" step="1" name="pharmacy-id" id="pharmacy-id" readonly />
+
         <label for="count">Count:</label>
-        <input type="number" step="1" name="count" id="count" required/>
+        <input type="number" step="1" name="count" id="count" required />
 
         <label for="price">Price:</label>
-        <input type="number" step="any" name="price" id="price" required/>
+        <input type="number" step="any" name="price" id="price" required />
     </div>
 </body>
 

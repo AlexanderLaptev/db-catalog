@@ -1,25 +1,26 @@
-// TODO: handle missing/empty websites
-const getEntityJsonFromForm = (formParams) => ({
-    "id": ENTITY_ID,
-    "name": formParams.get("name"),
-    "website": formParams.get("website"),
-    "latitude": formParams.get("latitude"),
-    "longitude": formParams.get("longitude"),
+const entityType = "pharmacy";
+const entityTypeName = "Pharmacy";
+
+const latitudeField = document.getElementById("latitude");
+const longitudeField = document.getElementById("longitude");
+const websiteField = document.getElementById("website");
+
+const oldUpdateForm = updateForm;
+updateForm = function (json) {
+    oldUpdateForm(json);
+
+    latitudeField.value = json["latitude"];
+    longitudeField.value = json["longitude"];
+
+    const website = json["website"];
+    if (website) websiteField.value = website;
+    else websiteField.value = "";
+};
+
+formToUpdateJson = () => ({
+    id: idField.value,
+    name: nameField.value,
+    website: websiteField.value,
+    latitude: latitudeField.value,
+    longitude: longitudeField.value
 });
-
-function updatePage(entityJson) {
-    const name = entityJson["name"];
-    const website = entityJson["website"];
-    const latitude = entityJson["latitude"];
-    const longitude = entityJson["longitude"];
-
-    document.getElementById("name").value = name;
-    document.getElementById("latitude").value = latitude;
-    document.getElementById("longitude").value = longitude;
-
-    if (website !== undefined) {
-        document.getElementById("website").value = website;
-    } else {
-        document.getElementById("website").value = "";
-    }
-}

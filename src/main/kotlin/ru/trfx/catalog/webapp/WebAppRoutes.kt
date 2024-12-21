@@ -14,7 +14,8 @@ import ru.trfx.catalog.pharmacy.PharmacyRepository
 import ru.trfx.catalog.repository.AbstractRepository
 import ru.trfx.catalog.response.ErrorResponse
 import ru.trfx.catalog.stock.StockRepository
-import ru.trfx.catalog.stock.StockTable
+
+private val PAGES = listOf("medicine", "company", "pharmacy", "manufacturer", "stock")
 
 fun Application.webAppRoutes() {
     routing {
@@ -60,104 +61,12 @@ private fun Route.tablePageRoute(type: String, title: String) {
 }
 
 private fun Route.editRoutes() {
-    editPageRoute("medicine", "Medicine", MedicineRepository)
-    editPageRoute("company", "Company", CompanyRepository)
-    editPageRoute("pharmacy", "Pharmacy", PharmacyRepository)
-
-    editManufacturerRoute()
-    editStockRoute()
+    for (page in PAGES) editPageRoute(page)
 }
 
-private fun Route.editPageRoute(type: String, name: String, repository: AbstractRepository<*>) {
+private fun Route.editPageRoute(type: String) {
     get("/$type/edit") {
-        val id = call.queryParameters["id"]?.toLongOrNull()
-        if (id == null) {
-            call.respond(HttpStatusCode.BadRequest)
-            return@get
-        }
-
-        val exists = transaction { repository.existsById(id) }
-        if (!exists) {
-            call.respond(HttpStatusCode.NotFound)
-            return@get
-        }
-
-        call.respond(
-            ThymeleafContent(
-                "/edit/base",
-                mapOf(
-                    "verb" to "edit",
-                    "type" to type,
-                    "name" to name,
-                )
-            )
-        )
-    }
-}
-
-private fun Route.editManufacturerRoute() {
-    get("/manufacturer/edit") {
-        val medicineId = call.queryParameters["medicine"]!!.toLongOrNull()
-        if (medicineId == null) {
-            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Malformed ID"))
-            return@get
-        }
-
-        val companyId = call.queryParameters["company"]!!.toLongOrNull()
-        if (companyId == null) {
-            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Malformed ID"))
-            return@get
-        }
-
-        val exists = transaction { MedicineManufacturerRepository.hasManufacturer(medicineId, companyId) }
-        if (!exists) {
-            call.respond(HttpStatusCode.NotFound)
-            return@get
-        }
-
-        call.respond(
-            ThymeleafContent(
-                "/edit/base",
-                mapOf(
-                    "verb" to "edit",
-                    "type" to "manufacturer",
-                    "name" to "Manufacturer",
-                )
-            )
-        )
-    }
-}
-
-private fun Route.editStockRoute() {
-    get("/stock/edit") {
-        val medicineId = call.queryParameters["medicine"]!!.toLongOrNull()
-        if (medicineId == null) {
-            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Malformed ID"))
-            return@get
-        }
-
-        val pharmacy = call.queryParameters["pharmacy"]!!.toLongOrNull()
-        if (pharmacy == null) {
-            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Malformed ID"))
-            return@get
-        }
-
-        val exists = transaction { StockRepository.find(medicineId, pharmacy) != null }
-        if (!exists) {
-            call.respond(HttpStatusCode.NotFound)
-            return@get
-        }
-
-        call.respond(
-            ThymeleafContent(
-                "/edit/base",
-                mapOf(
-                    "verb" to "edit",
-                    "type" to "stock",
-                    "name" to "Stock",
-                )
-            )
-        )
+        call.respond(ThymeleafContent("/edit/base", mapOf("type" to type)))
     }
 }
 

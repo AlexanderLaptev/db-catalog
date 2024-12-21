@@ -9,14 +9,8 @@
     <link rel="stylesheet" href="/styles/main.css" />
     <link rel="stylesheet" href="/styles/edit.css" />
 
-    <script src="/scripts/utils.js"></script>
-    <script th:inline="javascript" defer>
-        const API_PATH = /*[[${type}]]*/ "";
-        const NAME = /*[[${name}]]*/ "Entity";
-    </script>
-    <script th:src="|/scripts/base/add_edit_common.js|" defer></script>
-    <script th:src="|/scripts/base/${verb}.js|" defer></script>
-    <script th:src="|/scripts/${verb}/${type}.js|" defer></script>
+    <script src="/scripts/uberedit.js" defer></script>
+    <script th:src="|/scripts/edit/${type}.js|" defer></script>
 </head>
 
 <body onload="onPageLoaded()">
