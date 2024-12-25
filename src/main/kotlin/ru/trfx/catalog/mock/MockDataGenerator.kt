@@ -73,11 +73,12 @@ object MockDataGenerator {
 
         repeat(pharmacyCount) {
             val ids = medicineNames.indices.asSequence().shuffled(random).take(random.nextInt(4, 10)).map { it + 1 }
+            val stockCount = if (random.nextFloat() < 0.20) 0 else random.nextInt(1, 30)
             for (id in ids) {
                 val stock = Stock(
                     id.toLong(),
                     (it + 1).toLong(),
-                    random.nextInt(0, 30),
+                    stockCount,
                     random.nextInt(6, 120) * 5.0,
                 )
                 StockRepository.create(stock)

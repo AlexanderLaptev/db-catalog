@@ -2,7 +2,7 @@ input {
     min-height: 2.2em;
 }
 
-input:not([type="submit"]) {
+input:not([type="submit"]):not([type="checkbox"]) {
     min-width: 30em;
 
     padding: 6px;
@@ -26,6 +26,10 @@ input[type="submit"] {
     border-radius: 0;
 
     font-size: 1em;
+}
+
+input[type="checkbox"] {
+    scale: 120%;
 }
 
 label {

@@ -13,14 +13,16 @@ import ru.trfx.catalog.medicine.MedicineRepository
 import ru.trfx.catalog.pharmacy.PharmacyRepository
 import ru.trfx.catalog.repository.AbstractRepository
 import ru.trfx.catalog.response.ErrorResponse
+import ru.trfx.catalog.search.medicineSearchRoutes
 import ru.trfx.catalog.stock.StockRepository
-import ru.trfx.catalog.stock.StockTable
 
 fun Application.webAppRoutes() {
     routing {
         staticResources("/scripts", "scripts")
         staticResources("/styles", "styles")
+
         indexRoute()
+        medicineSearchRoutes()
 
         tableRoutes()
         editRoutes()
@@ -32,7 +34,7 @@ fun Application.webAppRoutes() {
 private fun Route.indexRoute() {
     route("/") {
         get {
-            call.respond(ThymeleafContent("welcome", emptyMap()))
+            call.respond(ThymeleafContent("welcome", mapOf()))
         }
     }
 }

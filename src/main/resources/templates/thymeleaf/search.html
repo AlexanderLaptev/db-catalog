@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Advanced Medicine Search</title>
+
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="/styles/main.css" />
+    <link rel="stylesheet" href="/styles/edit.css" />
+</head>
+
+<body>
+    <form id="form" autocomplete="off">
+        <label for="name">Names (separate with |):</label>
+        <input type="text" id="name" name="name" /><br />
+        
+        <label for="countries">Countries (separate with |):</label>
+        <input type="text" id="countries" name="countries" />
+        
+        <label for="min-price">Min price:</label>
+        <input type="number" min="0" step="any" id="min-price" name="min-price" />
+        
+        <label for="max-price">Max price:</label>
+        <input type="number" min="0" step="any" id="max-price" name="max-price" />
+        
+        <label for="in-stock">Show only in stock:</label>
+        <input type="checkbox" id="in-stock" name="in-stock" /><br />
+        
+        <input type="submit" value="Search" />
+    </form>
+</body>
+
+</html>
