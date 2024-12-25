@@ -10,22 +10,27 @@
 </head>
 
 <body>
-    <form id="form" autocomplete="off">
-        <label for="name">Names (separate with |):</label>
-        <input type="text" id="name" name="name" /><br />
-        
+    <h1>
+        <a id="back-button" href="/" class="header-button">&lt; back</a>
+        <span id="heading">Advanced Medicine Search</span>
+    </h1>
+
+    <form action="/search/results" method="get" id="form" autocomplete="off">
+        <label for="names">Names (separate with |):</label>
+        <input type="text" id="names" name="names" /><br />
+
         <label for="countries">Countries (separate with |):</label>
         <input type="text" id="countries" name="countries" />
-        
+
         <label for="min-price">Min price:</label>
         <input type="number" min="0" step="any" id="min-price" name="min-price" />
-        
+
         <label for="max-price">Max price:</label>
         <input type="number" min="0" step="any" id="max-price" name="max-price" />
-        
+
         <label for="in-stock">Show only in stock:</label>
         <input type="checkbox" id="in-stock" name="in-stock" /><br />
-        
+
         <input type="submit" value="Search" />
     </form>
 </body>
