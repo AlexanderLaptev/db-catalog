@@ -11,6 +11,7 @@ const countField = document.getElementById("count");
 const priceField = document.getElementById("price");
 
 getFetchUrl = () => `/api/stock?${searchString}`;
+getEditUrl = () => `/edit/${entityType}/?${searchString}`;
 getDeleteUrlSearchString = () => searchString;
 getEditTitleSuffix = (_) => entityTypeName;
 getEditHeadingSuffix = getEditTitleSuffix;
@@ -28,3 +29,10 @@ formToUpdateJson = () => ({
     "count": countField.value,
     "price": priceField.value,
 });
+
+formToCreateJson = formToUpdateJson;
+
+setIdFieldsFrozen = (frozen) => {
+    medicineId.readOnly = frozen;
+    pharmacyId.readOnly = frozen;
+}

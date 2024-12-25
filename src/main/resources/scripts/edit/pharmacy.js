@@ -17,8 +17,12 @@ updateForm = function (json) {
     else websiteField.value = "";
 };
 
-formToUpdateJson = () => ({
-    id: idField.value,
+formToUpdateJson = () => {
+    const json = formToCreateJson();
+    json["id"] = idField.value;    
+};
+
+formToCreateJson = () => ({
     name: nameField.value,
     website: websiteField.value,
     latitude: latitudeField.value,

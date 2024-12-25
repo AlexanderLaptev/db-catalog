@@ -9,8 +9,12 @@ updateForm = function (json) {
     countryField.value = json["country_code"].toUpperCase();
 };
 
-formToUpdateJson = () => ({
-    "id": idField.value,
+formToUpdateJson = () => {
+    const json = formToCreateJson();
+    json["id"] = idField.value;
+};
+
+formToCreateJson = () => ({
     "name": nameField.value,
     "country_code": countryField.value,
 });

@@ -9,6 +9,7 @@ const medicineIdField = document.getElementById("medicine-id");
 const companyIdField = document.getElementById("company-id");
 
 getFetchUrl = () => `/api/manufacturer?${searchString}`;
+getEditUrl = () => `/edit/${entityType}/?${searchString}`;
 getDeleteUrlSearchString = () => searchString;
 getEditTitleSuffix = (_) => entityTypeName;
 getEditHeadingSuffix = getEditTitleSuffix;
@@ -18,7 +19,12 @@ updateForm = function (json) {
     companyIdField.value = companyId;
 };
 
-formToUpdateJson = () => ({
+formToCreateJson = () => ({
     "medicine_id": medicineIdField.value,
     "company_id": pharmacyIdField.value,
 });
+
+setIdFieldsFrozen = (frozen) => {
+    medicineId.readOnly = frozen;
+    companyId.readOnly = frozen;
+}
