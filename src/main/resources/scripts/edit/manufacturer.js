@@ -1,19 +1,24 @@
-onPageLoaded = function() {
-    const params = new URLSearchParams(window.location.search);
-    const medicineId = params.get("medicine");
-    const companyId = params.get("company");
-    
-    document.title = `Editing ${NAME}`;
-    heading.innerText = document.title;
-    
-    backButton.setAttribute("href", `/${API_PATH}/view`);
-    deleteButton.setAttribute("href", `/${API_PATH}/delete?medicine=${medicineId}&company=${companyId}`);
-    
-    document.getElementById("submit").disabled = true;
-    document.getElementById("medicine-id").disabled = true;
-    document.getElementById("medicine-id").value = medicineId;
-    document.getElementById("company-id").disabled = true;
-    document.getElementById("company-id").value = companyId;
-}
+const entityType = "manufacturer";
+const entityTypeName = "Manufacturer";
 
-form.removeEventListener("submit", handleSubmit);
+const medicineId = searchParams.get("medicine")
+const companyId = searchParams.get("company")
+const searchString = `medicine=${medicineId}&company=${companyId}`;
+
+const medicineIdField = document.getElementById("medicine-id");
+const companyIdField = document.getElementById("company-id");
+
+getFetchUrl = () => `/api/manufacturer?${searchString}`;
+getDeleteUrlSearchString = () => searchString;
+getEditTitleSuffix = (_) => entityTypeName;
+getEditHeadingSuffix = getEditTitleSuffix;
+
+updateForm = function (json) {
+    medicineIdField.value = medicineId;
+    companyIdField.value = companyId;
+};
+
+formToUpdateJson = () => ({
+    "medicine_id": medicineIdField.value,
+    "company_id": pharmacyIdField.value,
+});

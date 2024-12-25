@@ -1,13 +1,16 @@
-const getEntityJsonFromForm = (formParams) => ({
-    "id": ENTITY_ID,
-    "name": formParams.get("name"),
-    "country_code": formParams.get("country").toUpperCase(),
+const entityType = "company";
+const entityTypeName = "Company";
+
+const countryField = document.getElementById("country");
+
+const oldUpdateForm = updateForm;
+updateForm = function (json) {
+    oldUpdateForm(json);
+    countryField.value = json["country_code"].toUpperCase();
+};
+
+formToUpdateJson = () => ({
+    "id": idField.value,
+    "name": nameField.value,
+    "country_code": countryField.value,
 });
-
-function updatePage(entityJson) {
-    const name = entityJson["name"];
-    const country = entityJson["country_code"].toUpperCase();
-
-    document.getElementById("name").value = name;
-    document.getElementById("country").value = country;
-}

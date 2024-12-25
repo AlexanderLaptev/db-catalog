@@ -1,9 +1,7 @@
-const getEntityJsonFromForm = (formParams) => ({
-    "id": ENTITY_ID,
-    "name": formParams.get("name"),
-});
+const entityType = "medicine";
+const entityTypeName = "Medicine";
 
-function updatePage(entityJson) {
-    const name = entityJson["name"];
-    document.getElementById("name").value = name;
-}
+formToUpdateJson = () => ({
+    id: idField.value,
+    name: nameField.value,
+});
