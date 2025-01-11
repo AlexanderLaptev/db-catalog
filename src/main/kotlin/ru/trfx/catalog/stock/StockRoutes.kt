@@ -9,6 +9,7 @@ import org.jetbrains.exposed.sql.transactions.transaction
 import ru.trfx.catalog.response.ErrorResponse
 import ru.trfx.catalog.util.page
 import ru.trfx.catalog.util.pageSize
+import java.sql.SQLException
 
 fun Application.stockRoutes() {
     routing {
@@ -68,7 +69,11 @@ private fun Route.addRoute() {
             return@post
         }
 
-        transaction { StockRepository.create(stock) }
+        try {
+            transaction { StockRepository.create(stock) }
+        } catch (e: SQLException) {
+            call.respond(HttpStatusCode.BadRequest, ErrorResponse("Invalid IDs"))
+        }
         call.respond(HttpStatusCode.NoContent)
     }
 }

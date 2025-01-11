@@ -78,6 +78,6 @@ object SearchEngine {
 
         this[CompanyTable.countryCode],
         this[StockTable.price],
-        this[StockTable.count]
+        this[StockTable.count],
     )
 }

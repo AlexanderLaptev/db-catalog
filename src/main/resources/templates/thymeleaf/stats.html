@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="/styles/main.css" />
+
+    <title>Medicine Statistics</title>
+</head>
+
+<body>
+    <h1>
+        <a href="/" class="header-button">&lt; back</a>
+        <span id="heading" th:text="${title}">Medicine Statistics</span>
+    </h1>
+
+    <ul>
+        <li>Total count: <span th:text="${medCount}"></span></li>
+        <li>Average medicine price: <span th:text="${avgPrice}" id="avg-price"></span></li>
+        <li>Min medicine price: <span th:text="${minPrice}" id="min-price"></span></li>
+        <li>Max medicine price: <span th:text="${maxPrice}" id="max-price"></span></li>
+    </ul>
+</body>
+
+</html>

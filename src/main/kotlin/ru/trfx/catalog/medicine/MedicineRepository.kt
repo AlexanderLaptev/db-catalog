@@ -2,6 +2,9 @@ package ru.trfx.catalog.medicine
 
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
+import org.jetbrains.exposed.sql.avg
+import org.jetbrains.exposed.sql.max
+import org.jetbrains.exposed.sql.min
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.statements.UpdateBuilder
 import ru.trfx.catalog.manufacturer.MedicineManufacturerTable
@@ -54,5 +57,36 @@ object MedicineRepository : AbstractRepository<Medicine>(
             .map { it.toModel() }
 
         return PageResponse(lastPage, lastRow, data)
+    }
+
+    fun calcAveragePrice(): Double {
+        return StockTable
+            .select(StockTable.price.avg())
+            .map {
+                it[StockTable.price.avg()]
+            }
+            .first()?.toDouble() ?: Double.NaN
+    }
+
+    fun calcMinPrice(): Double {
+        return StockTable
+            .select(StockTable.price.min())
+            .map {
+                it[StockTable.price.min()]
+            }
+            .first() as Double
+    }
+
+    fun calcMaxPrice(): Double {
+        return StockTable
+            .select(StockTable.price.max())
+            .map {
+                it[StockTable.price.max()]
+            }
+            .first() as Double
+    }
+
+    fun count(): Long {
+        return table.selectAll().count()
     }
 }

@@ -56,6 +56,7 @@ fun Application.main() {
 private fun configureDatabase(logger: Logger) {
     db = Database.connect(
         arrayOf(
+//            "jdbc:h2:./h2database",
             "jdbc:h2:mem:regular",
             "MODE=PostgreSQL",
             "DATABASE_TO_LOWER=TRUE",

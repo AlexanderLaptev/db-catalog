@@ -23,6 +23,7 @@ fun Application.webAppRoutes() {
 
         indexRoute()
         medicineSearchRoutes()
+        statsRoute()
 
         tableRoutes()
         editRoutes()
@@ -34,7 +35,36 @@ fun Application.webAppRoutes() {
 private fun Route.indexRoute() {
     route("/") {
         get {
-            call.respond(ThymeleafContent("welcome", mapOf()))
+            call.respond(ThymeleafContent("welcome", emptyMap()))
+        }
+    }
+}
+
+private fun Route.statsRoute() {
+    route("/stats") {
+        get {
+            var medCount = 0L
+            var avgPrice = Float.NaN
+            var minPrice = Float.NaN
+            var maxPrice = Float.NaN
+            transaction {
+                medCount = MedicineRepository.count()
+                avgPrice = MedicineRepository.calcAveragePrice().toFloat()
+                minPrice = MedicineRepository.calcMinPrice().toFloat()
+                maxPrice = MedicineRepository.calcMaxPrice().toFloat()
+            }
+
+            call.respond(
+                ThymeleafContent(
+                    "stats",
+                    mapOf(
+                        "medCount" to medCount,
+                        "avgPrice" to avgPrice,
+                        "minPrice" to minPrice,
+                        "maxPrice" to maxPrice,
+                    ),
+                )
+            )
         }
     }
 }

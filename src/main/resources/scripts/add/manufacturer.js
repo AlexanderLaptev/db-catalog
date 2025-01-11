@@ -16,7 +16,7 @@ handleSubmit = async function (event) {
     if (response.ok) {
         window.location.href = `/manufacturer/edit${queryString}`;
     } else {
-        displayErrorMessage();
+        displayErrorMessage(response);
     }
 }
 form.addEventListener("submit", handleSubmit);
