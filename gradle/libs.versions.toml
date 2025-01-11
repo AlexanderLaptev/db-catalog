@@ -3,8 +3,8 @@
 exposed-version = "0.56.0"
 h2-version = "2.3.232"
 kotlin-version = "2.0.21"
-ktor-version = "3.0.1"
-logback-version = "1.4.14"
+ktor-version = "3.0.3"
+logback-version = "1.5.16"
 
 [libraries]
 ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor-version" }
